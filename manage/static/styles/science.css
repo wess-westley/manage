@@ -1,0 +1,18 @@
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: #f5f7fa; color: #333; }
+        .header { background: linear-gradient(135deg, #3a7bd5, #00d2ff); color: white; padding: 1.5rem; text-align: center; }
+        .nav { display: flex; background: #333; flex-wrap: wrap; }
+        .nav a { color: white; padding: 1rem; flex: 1; text-align: center; text-decoration: none; }
+        .nav a:hover { background: #3a7bd5; }
+        .dashboard { display: flex; flex-wrap: wrap; gap: 1.5rem; padding: 1.5rem; }
+        .card { background: white; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 1.5rem; width: 30%; transition: transform 0.3s; }
+        .card:hover { transform: translateY(-5px); }
+        .card h3 { margin-top: 0; color: #3a7bd5; border-bottom: 2px solid #eee; padding-bottom: 0.5rem; }
+        .subject-bio { border-left: 5px solid #4CAF50; }
+        .subject-chem { border-left: 5px solid #FF5722; }
+        .subject-phy { border-left: 5px solid #9C27B0; }
+        .btn { background: #3a7bd5; color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; margin-top: 1rem; }
+        .btn:hover { background: #2a5db0; }
+        @media (max-width: 768px) { .card { width: 100%; } .nav { flex-direction: column; } }
+        #grades, #resources, #hod { display: none; padding: 1.5rem; }
+        #resourceList a { display: block; margin: 0.5rem 0; color: #3a7bd5; text-decoration: none; }
+        #resourceList a:hover { text-decoration: underline; }

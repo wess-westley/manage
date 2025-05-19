@@ -1,0 +1,115 @@
+
+/* Global Styles */
+:root {
+    --primary: #2E86C1;
+    --secondary: #28B463;
+    --danger: #E74C3C;
+    --warning: #F39C12;
+    --light-gray: #F8F9F9;
+}
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f7fa;
+    color: #333;
+}
+.header {
+    background: linear-gradient(135deg, #2E86C1, #4A6FA5);
+    color: white;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+/* Navbar */
+.nav {
+    display: flex;
+    background-color: #333;
+    overflow: hidden;
+}
+.nav a {
+    color: white;
+    padding: 1rem;
+    text-decoration: none;
+    text-align: center;
+    flex: 1;
+}
+.nav a:hover {
+    background-color: #2E86C1;
+}
+/* Dashboard Layout */
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    padding: 1.5rem;
+}
+.card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    transition: transform 0.3s;
+}
+.card:hover {
+    transform: translateY(-5px);
+}
+.card h3 {
+    margin-top: 0;
+    color: var(--primary);
+    border-bottom: 2px solid #eee;
+    padding-bottom: 0.5rem;
+}
+/* Financial Metrics */
+.metric {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 1rem 0;
+}
+.metric.income { color: var(--secondary); }
+.metric.expenses { color: var(--danger); }
+.metric.profit { color: var(--primary); }
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+th, td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+th {
+    background-color: var(--primary);
+    color: white;
+}
+tr:hover {
+    background-color: #f1f1f1;
+}
+/* Buttons */
+.btn {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 1rem;
+    display: inline-block;
+}
+.btn:hover {
+    opacity: 0.9;
+}
+.btn-warning {
+    background-color: var(--warning);
+}
+.btn-danger {
+    background-color: var(--danger);
+}
+/* Responsive */
+@media (max-width: 768px) {
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
+}

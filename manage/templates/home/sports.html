@@ -1,0 +1,781 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sports & Entertainment Department</title>
+    <link rel="stylesheet" href='{% static "styles/sports_entertainment.css" %}'>
+    <style>
+        :root {
+            --primary-color: #1e3a8a;  /* Sports blue */
+            --secondary-color: #1e40af;
+            --accent-color: #f59e0b;   /* Entertainment gold */
+            --light-color: #f8fafc;
+            --dark-color: #1e293b;
+            --success-color: #10b981;
+            --warning-color: #ef4444;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .top-nav {
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .navbar {
+            display: flex;
+            background-color: var(--dark-color);
+            padding: 10px;
+        }
+        
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            margin-right: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .navbar a:hover {
+            background-color: var(--accent-color);
+            color: var(--dark-color);
+        }
+        
+        .section {
+            padding: 20px;
+            margin: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: none; /* Initially hidden */
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 10px;
+        }
+        
+        .card h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+        }
+        
+        .value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 15px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-warning {
+            background-color: var(--warning-color);
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+        }
+        
+        .btn-accent {
+            background-color: var(--accent-color);
+            color: var(--dark-color);
+        }
+        
+        #login-form {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .login-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 300px;
+            text-align: center;
+        }
+        
+        #login-error {
+            color: var(--warning-color);
+            display: none;
+        }
+        
+        .sport-icon {
+            font-size: 1.2rem;
+            margin-right: 5px;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 5px;
+            background-color: var(--accent-color);
+        }
+        
+        .team-logo {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        .event-card {
+            display: flex;
+            margin: 15px 0;
+            border-left: 4px solid var(--accent-color);
+            padding-left: 10px;
+        }
+        
+        .event-date {
+            font-weight: bold;
+            color: var(--primary-color);
+            min-width: 100px;
+        }
+        
+        .event-details {
+            flex-grow: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>SPORTS & ENTERTAINMENT DEPARTMENT</h1>
+        <p>Football • Basketball • Athletics • Drama • Music • Events</p>
+    </div>
+
+    <div class="top-nav">
+        <button class="exit-btn">Exit</button>
+    </div>
+
+    <div class="navbar">
+        <a href="javascript:void(0)" onclick="navigateTo('dashboard')">Dashboard</a>
+        <a href="javascript:void(0)" onclick="requestAccess('team-management')">Team Management</a>
+        <a href="javascript:void(0)" onclick="requestAccess('events-management')">Events Management</a>
+        <a href="javascript:void(0)" onclick="requestAccess('facility-booking')">Facility Booking</a>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="section" id="dashboard">
+        <div style="display: flex; flex-wrap: wrap;">
+            <div class="card">
+                <h2>Active Participants</h2>
+                <div class="value">1,250</div>
+                <p>Across all sports and activities</p>
+            </div>
+            <div class="card">
+                <h2>Upcoming Events</h2>
+                <div class="value">18</div>
+                <p>In the next 30 days</p>
+            </div>
+            <div class="card">
+                <h2>Recent Achievements</h2>
+                <ul style="list-style-type: none; padding: 0;">
+                    <li>🏆 Football team won regional finals</li>
+                    <li>🎭 Drama club's successful performance</li>
+                    <li>🏅 5 new athletic records</li>
+                    <li>🎵 Music ensemble competition winners</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h2>Activity Distribution</h2>
+                <p><span class="sport-icon">⚽</span> Football: 35%</p>
+                <div class="progress-bar"><div class="progress-fill" style="width:35%"></div></div>
+                <p><span class="sport-icon">🏀</span> Basketball: 25%</p>
+                <div class="progress-bar"><div class="progress-fill" style="width:25%"></div></div>
+                <p><span class="sport-icon">🎭</span> Performing Arts: 20%</p>
+                <div class="progress-bar"><div class="progress-fill" style="width:20%"></div></div>
+                <p><span class="sport-icon">🏃</span> Athletics: 15%</p>
+                <div class="progress-bar"><div class="progress-fill" style="width:15%"></div></div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <h2>Upcoming Schedule</h2>
+            <div class="event-card">
+                <div class="event-date">May 25, 2023</div>
+                <div class="event-details">
+                    <strong>Football:</strong> Inter-school tournament vs. City High
+                </div>
+            </div>
+            <div class="event-card">
+                <div class="event-date">May 28, 2023</div>
+                <div class="event-details">
+                    <strong>Drama:</strong> Spring play performance (7:00 PM)
+                </div>
+            </div>
+            <div class="event-card">
+                <div class="event-date">June 2, 2023</div>
+                <div class="event-details">
+                    <strong>Music:</strong> Annual choir competition
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TEAM MANAGEMENT -->
+    <div class="section" id="team-management">
+        <h2>Team Management</h2>
+        <button class="btn" onclick="showForm('roster-form')">Update Rosters</button>
+        <button class="btn" onclick="showForm('fixture-form')">Schedule Fixtures</button>
+        <button class="btn" onclick="showForm('equipment-form')">Manage Equipment</button>
+
+        <div id="roster-form" style="display:none; margin-top:20px;">
+            <h3>Team Rosters</h3>
+            <div style="margin-bottom:10px;">
+                <label>Sport/Activity:</label>
+                <select style="padding:8px; width:100%;">
+                    <option>Football</option>
+                    <option>Basketball</option>
+                    <option>Athletics</option>
+                    <option>Drama</option>
+                    <option>Music</option>
+                </select>
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Team:</label>
+                <select style="padding:8px; width:100%;">
+                    <option>Varsity Team</option>
+                    <option>Junior Varsity</option>
+                    <option>Development Squad</option>
+                </select>
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Action:</label>
+                <select style="padding:8px; width:100%;">
+                    <option>Add Player</option>
+                    <option>Remove Player</option>
+                    <option>Update Positions</option>
+                </select>
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Player Name/ID:</label>
+                <input type="text" placeholder="Enter name or student ID" style="padding:8px; width:100%;">
+            </div>
+            <button class="btn">Update Roster</button>
+        </div>
+
+        <div id="fixture-form" style="display:none; margin-top:20px;">
+            <h3>Schedule Fixtures</h3>
+            <div style="margin-bottom:10px;">
+                <label>Sport:</label>
+                <select style="padding:8px; width:100%;">
+                    <option>Football</option>
+                    <option>Basketball</option>
+                    <option>Athletics</option>
+                </select>
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Opponent:</label>
+                <input type="text" placeholder="Opponent name" style="padding:8px; width:100%;">
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Date & Time:</label>
+                <input type="datetime-local" style="padding:8px; width:100%;">
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Location:</label>
+                <select style="padding:8px; width:100%;">
+                    <option>Home - Main Field</option>
+                    <option>Home - Gymnasium</option>
+                    <option>Away</option>
+                </select>
+            </div>
+            <button class="btn">Schedule Fixture</button>
+        </div>
+
+        <div id="equipment-form" style="display:none; margin-top:20px;">
+            <h3>Equipment Management</h3>
+            <div style="margin-bottom:10px;">
+                <label>Equipment Type:</label>
+                <select style="padding:8px; width:100%;">
+                    <option>Football Gear</option>
+                    <option>Basketball Gear</option>
+                    <option>Athletics Equipment</option>
+                    <option>Performing Arts Props</option>
+                    <option>Musical Instruments</option>
+                </select>
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Action:</label>
+                <select style="padding:8px; width:100%;">
+                    <option>Check Out</option>
+                    <option>Check In</option>
+                    <option>Report Damage</option>
+                    <option>Request New</option>
+                </select>
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Quantity:</label>
+                <input type="number" min="1" value="1" style="padding:8px; width:100%;">
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Notes:</label>
+                <textarea style="width:100%; padding:8px;"></textarea>
+            </div>
+            <button class="btn">Submit Request</button>
+        </div>
+    </div>
+
+    <!-- EVENTS MANAGEMENT -->
+    <div class="section" id="events-management">
+        <h2>Events Management</h2>
+        
+        <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+            <button class="btn" onclick="showEventsSection('upcoming')">Upcoming Events</button>
+            <button class="btn" onclick="showEventsSection('plan')">Plan New Event</button>
+            <button class="btn" onclick="showEventsSection('reports')">Event Reports</button>
+        </div>
+        
+        <!-- Upcoming Events Section -->
+        <div id="events-upcoming">
+            <h3>Upcoming Events</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Date</th>
+                        <th>Location</th>
+                        <th>Organizer</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Annual Sports Day</td>
+                        <td>2023-06-15</td>
+                        <td>Main Field</td>
+                        <td>Sports Committee</td>
+                        <td>Confirmed</td>
+                        <td>
+                            <button class="btn">View Details</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Spring Musical</td>
+                        <td>2023-05-28</td>
+                        <td>Auditorium</td>
+                        <td>Drama Club</td>
+                        <td>Final Rehearsal</td>
+                        <td>
+                            <button class="btn">Checklist</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Basketball Tournament</td>
+                        <td>2023-06-05</td>
+                        <td>Gymnasium</td>
+                        <td>Coach Johnson</td>
+                        <td>Pending Approval</td>
+                        <td>
+                            <button class="btn-success">Approve</button>
+                            <button class="btn-warning">Modify</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Plan New Event Section -->
+        <div id="events-plan" style="display:none;">
+            <h3>Plan New Event</h3>
+            <div style="margin-bottom:10px;">
+                <label>Event Type:</label>
+                <select style="padding:8px; width:100%;">
+                    <option>Sports Competition</option>
+                    <option>Performing Arts</option>
+                    <option>Concert</option>
+                    <option>Exhibition</option>
+                    <option>Other</option>
+                </select>
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Event Name:</label>
+                <input type="text" placeholder="Event name" style="padding:8px; width:100%;">
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Proposed Date:</label>
+                <input type="date" style="padding:8px; width:100%;">
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Location:</label>
+                <select style="padding:8px; width:100%;">
+                    <option>Main Field</option>
+                    <option>Gymnasium</option>
+                    <option>Auditorium</option>
+                    <option>Classroom Block</option>
+                    <option>Other</option>
+                </select>
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Estimated Attendance:</label>
+                <input type="number" min="1" style="padding:8px; width:100%;">
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Budget Estimate:</label>
+                <input type="number" min="0" step="0.01" placeholder="0.00" style="padding:8px; width:100%;">
+            </div>
+            <textarea placeholder="Event description and requirements..." style="width:100%; padding:8px; min-height:100px;"></textarea>
+            <button class="btn">Submit Proposal</button>
+        </div>
+        
+        <!-- Event Reports Section -->
+        <div id="events-reports" style="display:none;">
+            <h3>Event Reports</h3>
+            <div style="margin-bottom:10px;">
+                <label>Select Event:</label>
+                <select style="padding:8px; width:100%;">
+                    <option>Annual Sports Day 2023</option>
+                    <option>Spring Musical 2023</option>
+                    <option>Basketball Tournament 2023</option>
+                    <option>Winter Concert 2022</option>
+                </select>
+            </div>
+            
+            <div style="background-color:#f8f8f8; padding:15px; border-radius:5px; margin-bottom:20px;">
+                <h4>Event Statistics</h4>
+                <div style="display:flex; flex-wrap:wrap;">
+                    <div style="flex:1; min-width:150px; margin:10px;">
+                        <p><strong>Attendance:</strong> 320</p>
+                    </div>
+                    <div style="flex:1; min-width:150px; margin:10px;">
+                        <p><strong>Budget:</strong> $1,250.00</p>
+                    </div>
+                    <div style="flex:1; min-width:150px; margin:10px;">
+                        <p><strong>Volunteers:</strong> 18</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-bottom:10px;">
+                <label>Report Type:</label>
+                <select style="padding:8px; width:100%;">
+                    <option>Financial Report</option>
+                    <option>Attendance Report</option>
+                    <option>Participant Feedback</option>
+                    <option>Full Event Report</option>
+                </select>
+            </div>
+            <button class="btn">Generate Report</button>
+        </div>
+    </div>
+
+    <!-- FACILITY BOOKING -->
+    <div class="section" id="facility-booking">
+        <h2>Facility Booking</h2>
+        
+        <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+            <button class="btn" onclick="showFacilitySection('calendar')">Booking Calendar</button>
+            <button class="btn" onclick="showFacilitySection('request')">New Booking</button>
+            <button class="btn" onclick="showFacilitySection('manage')">Manage Bookings</button>
+        </div>
+        
+        <!-- Booking Calendar Section -->
+        <div id="facility-calendar">
+            <h3>Facility Availability</h3>
+            <div style="background-color:#f8f8f8; padding:15px; border-radius:5px; margin-bottom:20px;">
+                <p><strong>Today's Bookings:</strong></p>
+                <ul>
+                    <li>Main Field: Football practice (3:00-5:00 PM)</li>
+                    <li>Gymnasium: Basketball tryouts (4:00-6:00 PM)</li>
+                    <li>Auditorium: Drama rehearsal (2:00-4:00 PM)</li>
+                </ul>
+            </div>
+            
+            <div style="overflow-x:auto;">
+                <table style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>Facility</th>
+                            <th>Mon 22</th>
+                            <th>Tue 23</th>
+                            <th>Wed 24</th>
+                            <th>Thu 25</th>
+                            <th>Fri 26</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Main Field</td>
+                            <td>Available</td>
+                            <td>Football (3-5)</td>
+                            <td>Available</td>
+                            <td>Athletics</td>
+                            <td>Available</td>
+                        </tr>
+                        <tr>
+                            <td>Gymnasium</td>
+                            <td>Basketball</td>
+                            <td>Available</td>
+                            <td>Volleyball</td>
+                            <td>Available</td>
+                            <td>Maintenance</td>
+                        </tr>
+                        <tr>
+                            <td>Auditorium</td>
+                            <td>Drama</td>
+                            <td>Music</td>
+                            <td>Available</td>
+                            <td>Assembly</td>
+                            <td>Available</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- New Booking Section -->
+        <div id="facility-request" style="display:none;">
+            <h3>Request Facility Booking</h3>
+            <div style="margin-bottom:10px;">
+                <label>Facility:</label>
+                <select style="padding:8px; width:100%;">
+                    <option>Main Field</option>
+                    <option>Gymnasium</option>
+                    <option>Auditorium</option>
+                    <option>Classroom Block</option>
+                    <option>Music Room</option>
+                    <option>Drama Studio</option>
+                </select>
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Date:</label>
+                <input type="date" style="padding:8px; width:100%;">
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Start Time:</label>
+                <input type="time" style="padding:8px; width:100%;">
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>End Time:</label>
+                <input type="time" style="padding:8px; width:100%;">
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Purpose:</label>
+                <input type="text" placeholder="Brief description" style="padding:8px; width:100%;">
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Expected Attendance:</label>
+                <input type="number" min="1" style="padding:8px; width:100%;">
+            </div>
+            <button class="btn">Submit Request</button>
+        </div>
+        
+        <!-- Manage Bookings Section -->
+        <div id="facility-manage" style="display:none;">
+            <h3>Manage Your Bookings</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Facility</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Purpose</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Gymnasium</td>
+                        <td>2023-05-25</td>
+                        <td>4:00-6:00 PM</td>
+                        <td>Basketball practice</td>
+                        <td>Approved</td>
+                        <td>
+                            <button class="btn">Details</button>
+                            <button class="btn-warning">Cancel</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Auditorium</td>
+                        <td>2023-05-30</td>
+                        <td>3:00-5:00 PM</td>
+                        <td>Dress rehearsal</td>
+                        <td>Pending</td>
+                        <td>
+                            <button class="btn">Modify</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div id="login-form" style="display:none;">
+        <div class="login-container">
+            <h3>Login Required</h3>
+            <div style="margin-bottom:15px;">
+                <label style="display:block; text-align:left; margin-bottom:5px;">Username:</label>
+                <input type="text" id="username-input" placeholder="Enter username" style="width:100%; padding:8px;">
+            </div>
+            <div style="margin-bottom:15px;">
+                <label style="display:block; text-align:left; margin-bottom:5px;">Password:</label>
+                <input type="password" id="password-input" placeholder="Enter password" style="width:100%; padding:8px;">
+            </div>
+            <div style="margin-bottom:15px;">
+                <label style="display:block; text-align:left; margin-bottom:5px;">Department:</label>
+                <select style="padding:8px; width:100%;">
+                    <option>Sports</option>
+                    <option>Performing Arts</option>
+                    <option>Events</option>
+                    <option>Administration</option>
+                </select>
+            </div>
+            <button class="btn" onclick="checkPassword()">Login</button>
+            <button class="btn-warning" onclick="closeLoginForm()">Cancel</button>
+            <p id="login-error" style="color:var(--warning-color); margin-top:10px; display:none;">Incorrect credentials!</p>
+        </div>
+    </div>
+
+    <script>
+        // Show initial section
+        document.addEventListener('DOMContentLoaded', function() {
+            navigateTo('dashboard');
+        });
+        
+        // Navigation function
+        function navigateTo(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).style.display = 'block';
+        }
+        
+        // Request access function (for protected sections)
+        function requestAccess(sectionId) {
+            document.getElementById('login-form').style.display = 'flex';
+            // Store the requested section to show after login
+            document.getElementById('login-form').dataset.requestedSection = sectionId;
+        }
+        
+        // Close login form
+        function closeLoginForm() {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('login-error').style.display = 'none';
+        }
+        
+        // Check password (simplified for demo)
+        function checkPassword() {
+            const username = document.getElementById('username-input').value;
+            const password = document.getElementById('password-input').value;
+            
+            // Demo credentials
+            if ((username === 'sportscoach' && password === 'coach123') || 
+                (username === 'eventsmanager' && password === 'events456')) {
+                
+                closeLoginForm();
+                const requestedSection = document.getElementById('login-form').dataset.requestedSection;
+                navigateTo(requestedSection);
+            } else {
+                document.getElementById('login-error').style.display = 'block';
+            }
+        }
+        
+        // Show form within sections
+        function showForm(formId) {
+            // Hide all forms first
+            ['roster-form', 'fixture-form', 'equipment-form'].forEach(id => {
+                document.getElementById(id).style.display = 'none';
+            });
+            
+            // Show requested form
+            document.getElementById(formId).style.display = 'block';
+        }
+        
+        // Show Events section
+        function showEventsSection(section) {
+            // Hide all Events sections
+            ['upcoming', 'plan', 'reports'].forEach(sec => {
+                document.getElementById(`events-${sec}`).style.display = 'none';
+            });
+            
+            // Show requested section
+            document.getElementById(`events-${section}`).style.display = 'block';
+        }
+        
+        // Show Facility section
+        function showFacilitySection(section) {
+            // Hide all Facility sections
+            ['calendar', 'request', 'manage'].forEach(sec => {
+                document.getElementById(`facility-${sec}`).style.display = 'none';
+            });
+            
+            // Show requested section
+            document.getElementById(`facility-${section}`).style.display = 'block';
+        }
+    </script>
+</body>
+</html>

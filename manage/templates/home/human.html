@@ -1,0 +1,572 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Humanities Department</title>
+    <link rel="stylesheet" href='{% static "styles/humanities.css" %}'>
+    <style>
+        :root {
+            --primary-color: #8e6c88;  /* Humanities purple */
+            --secondary-color: #6a4c6d;
+            --accent-color: #d4b483;   /* Gold accent */
+            --light-color: #f5f0e6;
+            --dark-color: #3e3e3e;
+            --success-color: #5a8f5a;
+            --warning-color: #b74a4a;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .top-nav {
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .navbar {
+            display: flex;
+            background-color: var(--dark-color);
+            padding: 10px;
+        }
+        
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            margin-right: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .navbar a:hover {
+            background-color: var(--accent-color);
+            color: var(--dark-color);
+        }
+        
+        .section {
+            padding: 20px;
+            margin: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: none; /* Initially hidden */
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 10px;
+        }
+        
+        .card h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+        }
+        
+        .value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 15px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-warning {
+            background-color: var(--warning-color);
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+        }
+        
+        #login-form {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .login-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 300px;
+            text-align: center;
+        }
+        
+        #login-error {
+            color: var(--warning-color);
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>HUMANITIES DEPARTMENT</h1>
+        <p>Literature • History • Philosophy • Cultural Studies</p>
+    </div>
+
+    <div class="top-nav">
+        <button class="exit-btn">Exit</button>
+    </div>
+
+    <div class="navbar">
+        <a href="javascript:void(0)" onclick="navigateTo('dashboard')">Dashboard</a>
+        <a href="javascript:void(0)" onclick="requestAccess('teacher-management')">Teacher Management</a>
+        <a href="javascript:void(0)" onclick="requestAccess('hod-dashboard')">HOD Dashboard</a>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="section" id="dashboard">
+        <div style="display: flex; flex-wrap: wrap;">
+            <div class="card">
+                <h2>Total Students</h2>
+                <div class="value">1,872</div>
+                <p>Across all disciplines</p>
+            </div>
+            <div class="card">
+                <h2>Total Teachers</h2>
+                <div class="value">34</div>
+                <p>Humanities faculty</p>
+            </div>
+            <div class="card">
+                <h2>Recent Activities</h2>
+                <ul style="list-style-type: none; padding: 0;">
+                    <li>📚 8 new essays submitted</li>
+                    <li>🗣️ 4 debate competitions</li>
+                    <li>🏛️ 3 department meetings</li>
+                    <li>✍️ 2 research papers published</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- STUDENT MANAGEMENT -->
+    <div class="section" id="student-management">
+        <h2>Student Management</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Discipline</th>
+                    <th>Class</th>
+                    <th>Students</th>
+                    <th>Subject Tutor</th>
+                    <th>Current Assignment</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Literature</td>
+                    <td>Form 1A</td>
+                    <td>52</td>
+                    <td>Dr. Williams</td>
+                    <td>Shakespeare Analysis</td>
+                </tr>
+                <tr>
+                    <td>History</td>
+                    <td>Form 2B</td>
+                    <td>48</td>
+                    <td>Prof. Johnson</td>
+                    <td>World War II Essay</td>
+                </tr>
+                <tr>
+                    <td>Philosophy</td>
+                    <td>Form 3C</td>
+                    <td>35</td>
+                    <td>Dr. Chen</td>
+                    <td>Ethics Debate</td>
+                </tr>
+                <tr>
+                    <td>Cultural Studies</td>
+                    <td>Form 4D</td>
+                    <td>42</td>
+                    <td>Prof. Martinez</td>
+                    <td>Research Paper</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- TEACHER MANAGEMENT -->
+    <div class="section" id="teacher-management">
+        <h2>Teacher Management</h2>
+        <button class="btn" onclick="showForm('concern-form')">Submit Concern</button>
+        <button class="btn" onclick="showForm('assignment-form')">Upload Student Work</button>
+        <button class="btn" onclick="showForm('attendance-form')">Register Attendance</button>
+
+        <div id="concern-form" style="display:none; margin-top:20px;">
+            <h3>Submit Concern</h3>
+            <select id="concern-type" style="width:100%; padding:8px; margin-bottom:10px;">
+                <option>Select concern type</option>
+                <option>Resource Request</option>
+                <option>Curriculum Issue</option>
+                <option>Student Matter</option>
+                <option>Other</option>
+            </select>
+            <textarea id="concern-text" placeholder="Describe your concern in detail..." style="width:100%; padding:8px; min-height:100px;"></textarea>
+            <button class="btn" onclick="submitConcern()">Submit Concern</button>
+        </div>
+
+        <div id="assignment-form" style="display:none; margin-top:20px;">
+            <h3>Upload Student Work</h3>
+            <div style="margin-bottom:10px;">
+                <label>Select Class:</label>
+                <select style="padding:8px;">
+                    <option>Form 1A - Literature</option>
+                    <option>Form 2B - History</option>
+                    <option>Form 3C - Philosophy</option>
+                    <option>Form 4D - Cultural Studies</option>
+                </select>
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Assignment Type:</label>
+                <select style="padding:8px;">
+                    <option>Essay</option>
+                    <option>Research Paper</option>
+                    <option>Creative Writing</option>
+                    <option>Debate Notes</option>
+                </select>
+            </div>
+            <input type="file" style="margin:10px 0;" accept=".doc,.docx,.pdf">
+            <button class="btn">Upload Assignments</button>
+        </div>
+
+        <div id="attendance-form" style="display:none; margin-top:20px;">
+            <h3>Register Attendance</h3>
+            <div style="margin-bottom:10px;">
+                <label>Date:</label>
+                <input type="date" style="padding:8px;">
+            </div>
+            <select id="attendance-status" style="padding:8px; width:100%; margin-bottom:10px;">
+                <option>Present</option>
+                <option>Absent</option>
+                <option>Research Leave</option>
+                <option>Conference Attendance</option>
+                <option>Sick Leave</option>
+            </select>
+            <textarea id="attendance-notes" placeholder="Additional notes..." style="width:100%; padding:8px; min-height:60px;"></textarea>
+            <button class="btn">Submit Attendance</button>
+        </div>
+    </div>
+
+    <!-- HOD DASHBOARD -->
+    <div class="section" id="hod-dashboard">
+        <h2>HOD Dashboard</h2>
+        
+        <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+            <button class="btn" onclick="showHodSection('concerns')">Faculty Concerns</button>
+            <button class="btn" onclick="showHodSection('allocation')">Faculty Allocation</button>
+            <button class="btn" onclick="showHodSection('status')">Faculty Status</button>
+            <button class="btn" onclick="showHodSection('announcements')">Announcements</button>
+        </div>
+        
+        <!-- Concerns Section -->
+        <div id="hod-concerns">
+            <h3>Faculty Concerns</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Faculty</th>
+                        <th>Concern Type</th>
+                        <th>Details</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2023-05-15</td>
+                        <td>Dr. Williams</td>
+                        <td>Resource Request</td>
+                        <td>Additional literature texts needed</td>
+                        <td>Pending</td>
+                        <td>
+                            <button class="btn-success">Approve</button>
+                            <button class="btn-warning">Deny</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2023-05-10</td>
+                        <td>Prof. Johnson</td>
+                        <td>Curriculum Issue</td>
+                        <td>Update history syllabus</td>
+                        <td>In Review</td>
+                        <td>
+                            <button class="btn">View</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Allocation Section -->
+        <div id="hod-allocation" style="display:none;">
+            <h3>Faculty Course Allocation</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Faculty</th>
+                        <th>Current Courses</th>
+                        <th>Requested Changes</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Dr. Chen</td>
+                        <td>Ethics, Logic</td>
+                        <td>
+                            <select style="padding:5px;">
+                                <option>Select course</option>
+                                <option>Political Philosophy</option>
+                                <option>Metaphysics</option>
+                                <option>Philosophy of Mind</option>
+                            </select>
+                        </td>
+                        <td>
+                            <button class="btn">Approve Change</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Prof. Martinez</td>
+                        <td>Cultural Anthropology</td>
+                        <td>
+                            <select style="padding:5px;">
+                                <option>Select course</option>
+                                <option>World Cultures</option>
+                                <option>Modern Society</option>
+                            </select>
+                        </td>
+                        <td>
+                            <button class="btn">Approve Change</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Status Section -->
+        <div id="hod-status" style="display:none;">
+            <h3>Faculty Status Changes</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Faculty</th>
+                        <th>Current Status</th>
+                        <th>Requested Change</th>
+                        <th>Reason</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Dr. Williams</td>
+                        <td>Full-time</td>
+                        <td>Sabbatical</td>
+                        <td>Research project</td>
+                        <td>
+                            <button class="btn-success">Approve</button>
+                            <button class="btn-warning">Deny</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Prof. Johnson</td>
+                        <td>Full-time</td>
+                        <td>Part-time</td>
+                        <td>Personal reasons</td>
+                        <td>
+                            <button class="btn-success">Approve</button>
+                            <button class="btn-warning">Deny</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Announcements Section -->
+        <div id="hod-announcements" style="display:none;">
+            <h3>Department Announcements</h3>
+            <div style="margin-bottom:20px;">
+                <label>Announcement Type:</label>
+                <select style="padding:8px;">
+                    <option>General</option>
+                    <option>Event</option>
+                    <option>Deadline</option>
+                    <option>Meeting</option>
+                </select>
+            </div>
+            <textarea id="announcement-text" placeholder="Enter your announcement here..." style="width:100%; padding:8px; min-height:100px;"></textarea>
+            <div style="margin-top:10px;">
+                <button class="btn">Preview</button>
+                <button class="btn-success">Publish</button>
+            </div>
+            
+            <h4 style="margin-top:30px;">Recent Announcements</h4>
+            <div style="background-color:#f8f8f8; padding:15px; border-radius:5px;">
+                <p><strong>May 15 - Department Meeting</strong></p>
+                <p>Reminder: Monthly department meeting this Friday at 2pm in the faculty lounge.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div id="login-form" style="display:none;">
+        <div class="login-container">
+            <h3>Login Required</h3>
+            <div style="margin-bottom:15px;">
+                <label style="display:block; text-align:left; margin-bottom:5px;">Username:</label>
+                <input type="text" id="username-input" placeholder="Enter username" style="width:100%; padding:8px;">
+            </div>
+            <div style="margin-bottom:15px;">
+                <label style="display:block; text-align:left; margin-bottom:5px;">Password:</label>
+                <input type="password" id="password-input" placeholder="Enter password" style="width:100%; padding:8px;">
+            </div>
+            <button class="btn" onclick="checkPassword()">Login</button>
+            <button class="btn-warning" onclick="closeLoginForm()">Cancel</button>
+            <p id="login-error" style="color:var(--warning-color); margin-top:10px; display:none;">Incorrect credentials!</p>
+        </div>
+    </div>
+
+    <script>
+        // Show initial section
+        document.addEventListener('DOMContentLoaded', function() {
+            navigateTo('dashboard');
+        });
+        
+        // Navigation function
+        function navigateTo(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).style.display = 'block';
+        }
+        
+        // Request access function (for protected sections)
+        function requestAccess(sectionId) {
+            document.getElementById('login-form').style.display = 'flex';
+            // Store the requested section to show after login
+            document.getElementById('login-form').dataset.requestedSection = sectionId;
+        }
+        
+        // Close login form
+        function closeLoginForm() {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('login-error').style.display = 'none';
+        }
+        
+        // Check password (simplified for demo)
+        function checkPassword() {
+            const username = document.getElementById('username-input').value;
+            const password = document.getElementById('password-input').value;
+            
+            // Demo credentials
+            if ((username === 'teacher' && password === 'teach123') || 
+                (username === 'hod' && password === 'hod123')) {
+                
+                closeLoginForm();
+                const requestedSection = document.getElementById('login-form').dataset.requestedSection;
+                navigateTo(requestedSection);
+            } else {
+                document.getElementById('login-error').style.display = 'block';
+            }
+        }
+        
+        // Show form within sections
+        function showForm(formId) {
+            // Hide all forms first
+            ['concern-form', 'assignment-form', 'attendance-form'].forEach(id => {
+                document.getElementById(id).style.display = 'none';
+            });
+            
+            // Show requested form
+            document.getElementById(formId).style.display = 'block';
+        }
+        
+        // Show HOD section
+        function showHodSection(section) {
+            // Hide all HOD sections
+            ['concerns', 'allocation', 'status', 'announcements'].forEach(sec => {
+                document.getElementById(`hod-${sec}`).style.display = 'none';
+            });
+            
+            // Show requested section
+            document.getElementById(`hod-${section}`).style.display = 'block';
+        }
+        
+        // Submit concern
+        function submitConcern() {
+            const concernType = document.getElementById('concern-type').value;
+            const concernText = document.getElementById('concern-text').value;
+            
+            if (concernType && concernText) {
+                alert('Concern submitted successfully!');
+                document.getElementById('concern-form').style.display = 'none';
+            } else {
+                alert('Please fill all fields');
+            }
+        }
+    </script>
+</body>
+</html>

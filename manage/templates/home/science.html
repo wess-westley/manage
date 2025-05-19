@@ -1,0 +1,605 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Science Department</title>
+    <link rel="stylesheet" href='{% static "styles/science.css" %}'>
+    <style>
+        :root {
+            --primary-color: #2c6e8f;  /* Science blue */
+            --secondary-color: #1a4b6b;
+            --accent-color: #4db564;   /* Green accent */
+            --light-color: #f0f7f4;
+            --dark-color: #333333;
+            --success-color: #4db564;
+            --warning-color: #e85d75;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .top-nav {
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .navbar {
+            display: flex;
+            background-color: var(--dark-color);
+            padding: 10px;
+        }
+        
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            margin-right: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .navbar a:hover {
+            background-color: var(--accent-color);
+            color: var(--dark-color);
+        }
+        
+        .section {
+            padding: 20px;
+            margin: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: none; /* Initially hidden */
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 10px;
+        }
+        
+        .card h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+        }
+        
+        .value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 15px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-warning {
+            background-color: var(--warning-color);
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+        }
+        
+        #login-form {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .login-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 300px;
+            text-align: center;
+        }
+        
+        #login-error {
+            color: var(--warning-color);
+            display: none;
+        }
+        
+        .lab-booking {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>SCIENCE DEPARTMENT</h1>
+        <p>Biology • Chemistry • Physics • Environmental Science</p>
+    </div>
+
+    <div class="top-nav">
+        <button class="exit-btn">Exit</button>
+    </div>
+
+    <div class="navbar">
+        <a href="javascript:void(0)" onclick="navigateTo('dashboard')">Dashboard</a>
+        <a href="javascript:void(0)" onclick="requestAccess('teacher-management')">Teacher Management</a>
+        <a href="javascript:void(0)" onclick="requestAccess('hod-dashboard')">HOD Dashboard</a>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="section" id="dashboard">
+        <div style="display: flex; flex-wrap: wrap;">
+            <div class="card">
+                <h2>Total Students</h2>
+                <div class="value">1,950</div>
+                <p>Across all science streams</p>
+            </div>
+            <div class="card">
+                <h2>Total Teachers</h2>
+                <div class="value">42</div>
+                <p>Science faculty</p>
+            </div>
+            <div class="card">
+                <h2>Recent Activities</h2>
+                <ul style="list-style-type: none; padding: 0;">
+                    <li>🧪 12 lab sessions completed</li>
+                    <li>🔬 5 science fairs scheduled</li>
+                    <li>📊 8 research projects submitted</li>
+                    <li>🌱 3 field trips conducted</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- STUDENT MANAGEMENT -->
+    <div class="section" id="student-management">
+        <h2>Student Management</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Class</th>
+                    <th>Students</th>
+                    <th>Lab Instructor</th>
+                    <th>Current Experiment</th>
+                    <th>Safety Rating</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Biology</td>
+                    <td>Form 1A</td>
+                    <td>48</td>
+                    <td>Dr. Wilson</td>
+                    <td>Microscope Techniques</td>
+                    <td>⭐️⭐️⭐️⭐️</td>
+                </tr>
+                <tr>
+                    <td>Chemistry</td>
+                    <td>Form 2B</td>
+                    <td>52</td>
+                    <td>Prof. Chen</td>
+                    <td>Acid-Base Titration</td>
+                    <td>⭐️⭐️⭐️⭐️⭐️</td>
+                </tr>
+                <tr>
+                    <td>Physics</td>
+                    <td>Form 3C</td>
+                    <td>45</td>
+                    <td>Dr. Rodriguez</td>
+                    <td>Ohm's Law Verification</td>
+                    <td>⭐️⭐️⭐️⭐️</td>
+                </tr>
+                <tr>
+                    <td>Environmental Sci</td>
+                    <td>Form 4D</td>
+                    <td>40</td>
+                    <td>Prof. Johnson</td>
+                    <td>Water Quality Analysis</td>
+                    <td>⭐️⭐️⭐️</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- TEACHER MANAGEMENT -->
+    <div class="section" id="teacher-management">
+        <h2>Teacher Management</h2>
+        <button class="btn" onclick="showForm('lab-booking-form')">Book Laboratory</button>
+        <button class="btn" onclick="showForm('experiment-form')">Submit Experiment Results</button>
+        <button class="btn" onclick="showForm('safety-form')">Report Safety Issue</button>
+
+        <div id="lab-booking-form" style="display:none; margin-top:20px;">
+            <h3>Laboratory Booking</h3>
+            <div style="margin-bottom:10px;">
+                <label>Laboratory:</label>
+                <select style="padding:8px; width:100%;">
+                    <option>Biology Lab</option>
+                    <option>Chemistry Lab</option>
+                    <option>Physics Lab</option>
+                    <option>Environmental Science Lab</option>
+                </select>
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Date:</label>
+                <input type="date" style="padding:8px; width:100%;">
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Time Slot:</label>
+                <select style="padding:8px; width:100%;">
+                    <option>8:00-10:00 AM</option>
+                    <option>10:00-12:00 PM</option>
+                    <option>1:00-3:00 PM</option>
+                    <option>3:00-5:00 PM</option>
+                </select>
+            </div>
+            <button class="btn">Submit Booking</button>
+        </div>
+
+        <div id="experiment-form" style="display:none; margin-top:20px;">
+            <h3>Submit Experiment Results</h3>
+            <div style="margin-bottom:10px;">
+                <label>Class:</label>
+                <select style="padding:8px; width:100%;">
+                    <option>Form 1A - Biology</option>
+                    <option>Form 2B - Chemistry</option>
+                    <option>Form 3C - Physics</option>
+                    <option>Form 4D - Environmental Sci</option>
+                </select>
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Experiment:</label>
+                <input type="text" placeholder="Experiment name" style="padding:8px; width:100%;">
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Results File:</label>
+                <input type="file" style="margin:10px 0;" accept=".csv,.xlsx,.pdf">
+            </div>
+            <button class="btn">Submit Results</button>
+        </div>
+
+        <div id="safety-form" style="display:none; margin-top:20px;">
+            <h3>Safety Issue Report</h3>
+            <div style="margin-bottom:10px;">
+                <label>Issue Type:</label>
+                <select style="padding:8px; width:100%;">
+                    <option>Equipment Malfunction</option>
+                    <option>Chemical Spill</option>
+                    <option>Safety Gear Issue</option>
+                    <option>Other Hazard</option>
+                </select>
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Location:</label>
+                <input type="text" placeholder="Lab/room number" style="padding:8px; width:100%;">
+            </div>
+            <textarea placeholder="Describe the safety issue in detail..." style="width:100%; padding:8px; min-height:100px;"></textarea>
+            <div style="margin-top:10px;">
+                <label>Urgency:</label>
+                <select style="padding:8px; width:100%;">
+                    <option>Low</option>
+                    <option>Medium</option>
+                    <option>High</option>
+                    <option>Emergency</option>
+                </select>
+            </div>
+            <button class="btn-warning">Submit Report</button>
+        </div>
+    </div>
+
+    <!-- HOD DASHBOARD -->
+    <div class="section" id="hod-dashboard">
+        <h2>HOD Dashboard</h2>
+        
+        <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+            <button class="btn" onclick="showHodSection('lab-management')">Lab Management</button>
+            <button class="btn" onclick="showHodSection('safety')">Safety Reports</button>
+            <button class="btn" onclick="showHodSection('equipment')">Equipment</button>
+            <button class="btn" onclick="showHodSection('announcements')">Announcements</button>
+        </div>
+        
+        <!-- Lab Management Section -->
+        <div id="hod-lab-management">
+            <h3>Laboratory Management</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Lab</th>
+                        <th>Status</th>
+                        <th>Bookings Today</th>
+                        <th>Maintenance</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Biology Lab</td>
+                        <td>Operational</td>
+                        <td>3 (8AM, 11AM, 2PM)</td>
+                        <td>Next: 2023-06-15</td>
+                        <td>
+                            <button class="btn">View Schedule</button>
+                            <button class="btn-warning">Report Issue</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Chemistry Lab</td>
+                        <td>Maintenance</td>
+                        <td>0 (Closed)</td>
+                        <td>Until: 2023-05-20</td>
+                        <td>
+                            <button class="btn">Update Status</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h4 style="margin-top:20px;">Pending Booking Requests</h4>
+            <div class="lab-booking">
+                <p><strong>Dr. Wilson - Biology Lab</strong></p>
+                <p>Date: 2023-05-18 | Time: 10:00-12:00</p>
+                <p>Experiment: DNA Extraction</p>
+                <button class="btn-success">Approve</button>
+                <button class="btn-warning">Deny</button>
+            </div>
+        </div>
+        
+        <!-- Safety Reports Section -->
+        <div id="hod-safety" style="display:none;">
+            <h3>Safety Reports</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Reported By</th>
+                        <th>Issue Type</th>
+                        <th>Urgency</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2023-05-15</td>
+                        <td>Prof. Chen</td>
+                        <td>Chemical Spill</td>
+                        <td>Emergency</td>
+                        <td>Resolved</td>
+                        <td>
+                            <button class="btn">View Details</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2023-05-16</td>
+                        <td>Dr. Rodriguez</td>
+                        <td>Equipment Malfunction</td>
+                        <td>High</td>
+                        <td>Pending</td>
+                        <td>
+                            <button class="btn-success">Resolve</button>
+                            <button class="btn">Assign</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Equipment Section -->
+        <div id="hod-equipment" style="display:none;">
+            <h3>Equipment Inventory</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Equipment</th>
+                        <th>Lab</th>
+                        <th>Quantity</th>
+                        <th>Condition</th>
+                        <th>Last Calibration</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Microscopes</td>
+                        <td>Biology</td>
+                        <td>25</td>
+                        <td>22 Good, 3 Needs Repair</td>
+                        <td>2023-04-01</td>
+                        <td>
+                            <button class="btn">Order More</button>
+                            <button class="btn-warning">Schedule Repair</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Bunsen Burners</td>
+                        <td>Chemistry</td>
+                        <td>40</td>
+                        <td>35 Good, 5 Needs Replacement</td>
+                        <td>2023-05-01</td>
+                        <td>
+                            <button class="btn">Order More</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h4 style="margin-top:20px;">Equipment Requests</h4>
+            <div style="background-color:#f8f8f8; padding:15px; border-radius:5px; margin-bottom:10px;">
+                <p><strong>Dr. Wilson - Biology Lab</strong></p>
+                <p>Request: 5 Additional Microscopes</p>
+                <p>Reason: Increased class sizes</p>
+                <button class="btn-success">Approve</button>
+                <button class="btn-warning">Deny</button>
+            </div>
+        </div>
+        
+        <!-- Announcements Section -->
+        <div id="hod-announcements" style="display:none;">
+            <h3>Department Announcements</h3>
+            <div style="margin-bottom:20px;">
+                <label>Announcement Type:</label>
+                <select style="padding:8px;">
+                    <option>General</option>
+                    <option>Safety Alert</option>
+                    <option>Lab Schedule Change</option>
+                    <option>Meeting</option>
+                </select>
+            </div>
+            <textarea id="announcement-text" placeholder="Enter your announcement here..." style="width:100%; padding:8px; min-height:100px;"></textarea>
+            <div style="margin-top:10px;">
+                <button class="btn">Preview</button>
+                <button class="btn-success">Publish</button>
+            </div>
+            
+            <h4 style="margin-top:30px;">Recent Announcements</h4>
+            <div style="background-color:#f8f8f8; padding:15px; border-radius:5px;">
+                <p><strong>May 15 - Safety Drill</strong></p>
+                <p>Mandatory safety drill scheduled for all science staff this Friday at 10am.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div id="login-form" style="display:none;">
+        <div class="login-container">
+            <h3>Login Required</h3>
+            <div style="margin-bottom:15px;">
+                <label style="display:block; text-align:left; margin-bottom:5px;">Username:</label>
+                <input type="text" id="username-input" placeholder="Enter username" style="width:100%; padding:8px;">
+            </div>
+            <div style="margin-bottom:15px;">
+                <label style="display:block; text-align:left; margin-bottom:5px;">Password:</label>
+                <input type="password" id="password-input" placeholder="Enter password" style="width:100%; padding:8px;">
+            </div>
+            <button class="btn" onclick="checkPassword()">Login</button>
+            <button class="btn-warning" onclick="closeLoginForm()">Cancel</button>
+            <p id="login-error" style="color:var(--warning-color); margin-top:10px; display:none;">Incorrect credentials!</p>
+        </div>
+    </div>
+
+    <script>
+        // Show initial section
+        document.addEventListener('DOMContentLoaded', function() {
+            navigateTo('dashboard');
+        });
+        
+        // Navigation function
+        function navigateTo(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).style.display = 'block';
+        }
+        
+        // Request access function (for protected sections)
+        function requestAccess(sectionId) {
+            document.getElementById('login-form').style.display = 'flex';
+            // Store the requested section to show after login
+            document.getElementById('login-form').dataset.requestedSection = sectionId;
+        }
+        
+        // Close login form
+        function closeLoginForm() {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('login-error').style.display = 'none';
+        }
+        
+        // Check password (simplified for demo)
+        function checkPassword() {
+            const username = document.getElementById('username-input').value;
+            const password = document.getElementById('password-input').value;
+            
+            // Demo credentials
+            if ((username === 'scienceteacher' && password === 'lab123') || 
+                (username === 'sciencehod' && password === 'admin456')) {
+                
+                closeLoginForm();
+                const requestedSection = document.getElementById('login-form').dataset.requestedSection;
+                navigateTo(requestedSection);
+            } else {
+                document.getElementById('login-error').style.display = 'block';
+            }
+        }
+        
+        // Show form within sections
+        function showForm(formId) {
+            // Hide all forms first
+            ['lab-booking-form', 'experiment-form', 'safety-form'].forEach(id => {
+                document.getElementById(id).style.display = 'none';
+            });
+            
+            // Show requested form
+            document.getElementById(formId).style.display = 'block';
+        }
+        
+        // Show HOD section
+        function showHodSection(section) {
+            // Hide all HOD sections
+            ['lab-management', 'safety', 'equipment', 'announcements'].forEach(sec => {
+                document.getElementById(`hod-${sec}`).style.display = 'none';
+            });
+            
+            // Show requested section
+            document.getElementById(`hod-${section}`).style.display = 'block';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathematics Department</title>
+    <link rel="stylesheet" href='{% static "styles/math.css" %}'>
+</head>
+<body>
+    <div class="header">
+        <h1>MATHEMATICS DEPARTMENT</h1>
+    </div>
+
+    <div class="top-nav">
+        <button class="exit-btn">Exit</button>
+    </div>
+
+    <div class="navbar">
+        <a href="#dashboard">Dashboard</a>
+        <a href="javascript:void(0)" onclick="requestAccess('teacher-management')">Teacher Management</a>
+        <a href="javascript:void(0)" onclick="requestAccess('hod-dashboard')">HOD Dashboard</a>
+    </div>
+
+    <div class="dashboard" id="dashboard">
+        <!-- Dashboard Cards -->
+        <div class="card">
+            <h2>Total Students</h2>
+            <div class="value">1,245</div>
+            <p>Across all streams</p>
+        </div>
+        <div class="card">
+            <h2>Total Teachers</h2>
+            <div class="value">28</div>
+            <p>Mathematics staff</p>
+        </div>
+        <div class="card">
+            <h2>Recent Activities</h2>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>5 new complaints</li>
+                <li>3 performance updates</li>
+                <li>2 teacher allocations</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Student Management always visible -->
+    <div class="section" id="student-management">
+        <h2>Student Management</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Stream</th>
+                    <th>Class</th>
+                    <th>Students</th>
+                    <th>Math Promoter</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Science</td>
+                    <td>Form 1A</td>
+                    <td>45</td>
+                    <td>Mr. Johnson</td>
+                </tr>
+                <tr>
+                    <td>Science</td>
+                    <td>Form 2B</td>
+                    <td>42</td>
+                    <td>Mrs. Smith</td>
+                </tr>
+                <tr>
+                    <td>Arts</td>
+                    <td>Form 3C</td>
+                    <td>38</td>
+                    <td>Mr. Brown</td>
+                </tr>
+                <tr>
+                    <td>Commerce</td>
+                    <td>Form 4D</td>
+                    <td>40</td>
+                    <td>Ms. Davis</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Teacher Management (hidden until login) -->
+    <div class="section" id="teacher-management">
+        <h2>Teacher Management</h2>
+        <button class="btn" onclick="showComplaintForm()">Submit Complaint</button>
+        <button class="btn" onclick="showPerformanceForm()">Upload Performance</button>
+        <button class="btn" onclick="showAttendanceForm()">Register Attendance</button>
+
+        <div id="complaint-form" style="display:none; margin-top:20px;">
+            <h3>Submit Complaint</h3>
+            <textarea placeholder="Enter your complaint here..."></textarea>
+            <button class="btn">Submit</button>
+        </div>
+
+        <div id="performance-form" style="display:none; margin-top:20px;">
+            <h3>Upload Student Performance</h3>
+            <input type="file" style="margin:10px 0;">
+            <button class="btn">Upload</button>
+        </div>
+
+        <div id="attendance-form" style="display:none; margin-top:20px;">
+            <h3>Register Attendance</h3>
+            <select style="padding:8px; margin:10px 0; width:100%;">
+                <option>Present</option>
+                <option>Absent</option>
+                <option>Late</option>
+            </select>
+            <button class="btn">Submit</button>
+        </div>
+    </div>
+
+    <!-- HOD Dashboard (hidden until login) -->
+    <div class="section" id="hod-dashboard">
+        <h2>HOD Dashboard</h2>
+        <h3>Complaints</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>From</th>
+                    <th>Complaint</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2023-05-01</td>
+                    <td>Mr. Johnson</td>
+                    <td>Lack of teaching materials</td>
+                    <td>Pending</td>
+                    <td><button class="btn-success">Resolve</button></td>
+                </tr>
+                <tr>
+                    <td>2023-04-28</td>
+                    <td>Student (Form 2B)</td>
+                    <td>Difficulty understanding algebra</td>
+                    <td>Pending</td>
+                    <td><button class="btn-success">Resolve</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3 style="margin-top:30px;">Teacher Allocation</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Teacher</th>
+                    <th>Current Class</th>
+                    <th>New Class</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Mr. Johnson</td>
+                    <td>Form 1A</td>
+                    <td>
+                        <select style="padding:5px;">
+                            <option>Select class</option>
+                            <option>Form 2B</option>
+                            <option>Form 3C</option>
+                        </select>
+                    </td>
+                    <td><button class="btn">Allocate</button></td>
+                </tr>
+                <tr>
+                    <td>Mrs. Smith</td>
+                    <td>Form 2B</td>
+                    <td>
+                        <select style="padding:5px;">
+                            <option>Select class</option>
+                            <option>Form 1A</option>
+                            <option>Form 3C</option>
+                        </select>
+                    </td>
+                    <td><button class="btn">Allocate</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3 style="margin-top:30px;">Teacher Termination</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Teacher</th>
+                    <th>Current Classes</th>
+                    <th>Reason</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Mr. Brown</td>
+                    <td>Form 3C</td>
+                    <td><textarea placeholder="Enter reason" style="height:50px;"></textarea></td>
+                    <td><button class="btn-warning">Submit for Approval</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3 style="margin-top:30px;">Post Notification</h3>
+        <textarea placeholder="Enter notification message..."></textarea>
+        <button class="btn">Post Notification</button>
+    </div>
+
+    <!-- Login Form Modal -->
+    <div id="login-form">
+        <div class="login-container">
+            <h3>Login Required</h3>
+            <input type="password" id="password-input" placeholder="Enter password">
+            <button class="btn" onclick="checkPassword()">Login</button>
+            <button class="btn-warning" onclick="closeLoginForm()">Cancel</button>
+            <p id="login-error">Incorrect password!</p>
+        </div>
+    </div>
+
+    <script src='{% static "styles/javascript/math.js" %}'></script>
+</body>
+</html>

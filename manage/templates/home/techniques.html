@@ -1,0 +1,653 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technical Department</title>
+    <link rel="stylesheet" href='{% static "styles/technical.css" %}'>
+    <style>
+        :root {
+            --primary-color: #3a5f8a;  /* Technical blue */
+            --secondary-color: #2a4a6a;
+            --accent-color: #f7931e;   /* Orange accent */
+            --light-color: #f5f7fa;
+            --dark-color: #2d3748;
+            --success-color: #38a169;
+            --warning-color: #e53e3e;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .top-nav {
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .navbar {
+            display: flex;
+            background-color: var(--dark-color);
+            padding: 10px;
+        }
+        
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            margin-right: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .navbar a:hover {
+            background-color: var(--accent-color);
+            color: var(--dark-color);
+        }
+        
+        .section {
+            padding: 20px;
+            margin: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: none; /* Initially hidden */
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 10px;
+        }
+        
+        .card h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+        }
+        
+        .value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 15px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-warning {
+            background-color: var(--warning-color);
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+        }
+        
+        #login-form {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .login-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 300px;
+            text-align: center;
+        }
+        
+        #login-error {
+            color: var(--warning-color);
+            display: none;
+        }
+        
+        .workshop-booking {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        
+        .status-operational {
+            background-color: var(--success-color);
+        }
+        
+        .status-maintenance {
+            background-color: var(--warning-color);
+        }
+        
+        .status-offline {
+            background-color: #a0aec0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>TECHNICAL DEPARTMENT</h1>
+        <p>Engineering • IT • Automotive • Construction • Electronics</p>
+    </div>
+
+    <div class="top-nav">
+        <button class="exit-btn">Exit</button>
+    </div>
+
+    <div class="navbar">
+        <a href="javascript:void(0)" onclick="navigateTo('dashboard')">Dashboard</a>
+        <a href="javascript:void(0)" onclick="requestAccess('teacher-management')">Instructor Management</a>
+        <a href="javascript:void(0)" onclick="requestAccess('hod-dashboard')">HOD Dashboard</a>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="section" id="dashboard">
+        <div style="display: flex; flex-wrap: wrap;">
+            <div class="card">
+                <h2>Total Students</h2>
+                <div class="value">2,150</div>
+                <p>Across all technical programs</p>
+            </div>
+            <div class="card">
+                <h2>Total Instructors</h2>
+                <div class="value">38</div>
+                <p>Technical faculty</p>
+            </div>
+            <div class="card">
+                <h2>Recent Activities</h2>
+                <ul style="list-style-type: none; padding: 0;">
+                    <li>🛠️ 15 workshop sessions completed</li>
+                    <li>💻 8 coding competitions</li>
+                    <li>🏗️ 3 construction projects</li>
+                    <li>🔌 5 electrical installations</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h2>Equipment Status</h2>
+                <p><span class="status-indicator status-operational"></span> 85% Operational</p>
+                <p><span class="status-indicator status-maintenance"></span> 10% Maintenance</p>
+                <p><span class="status-indicator status-offline"></span> 5% Offline</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- STUDENT MANAGEMENT -->
+    <div class="section" id="student-management">
+        <h2>Student Management</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Program</th>
+                    <th>Class</th>
+                    <th>Students</th>
+                    <th>Instructor</th>
+                    <th>Current Project</th>
+                    <th>Workshop</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Mechanical Engineering</td>
+                    <td>ME-2023</td>
+                    <td>32</td>
+                    <td>Eng. Rodriguez</td>
+                    <td>Steam Turbine Assembly</td>
+                    <td>Workshop A</td>
+                </tr>
+                <tr>
+                    <td>Computer Science</td>
+                    <td>CS-2023</td>
+                    <td>45</td>
+                    <td>Prof. Chen</td>
+                    <td>Web App Development</td>
+                    <td>Computer Lab 2</td>
+                </tr>
+                <tr>
+                    <td>Electrical Engineering</td>
+                    <td>EE-2023</td>
+                    <td>28</td>
+                    <td>Dr. Wilson</td>
+                    <td>Circuit Design</td>
+                    <td>Electronics Lab</td>
+                </tr>
+                <tr>
+                    <td>Construction</td>
+                    <td>CON-2023</td>
+                    <td>25</td>
+                    <td>Mr. Johnson</td>
+                    <td>Scale Model Building</td>
+                    <td>Construction Yard</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- INSTRUCTOR MANAGEMENT -->
+    <div class="section" id="teacher-management">
+        <h2>Instructor Management</h2>
+        <button class="btn" onclick="showForm('workshop-booking-form')">Book Workshop</button>
+        <button class="btn" onclick="showForm('project-form')">Submit Project</button>
+        <button class="btn" onclick="showForm('equipment-form')">Request Equipment</button>
+
+        <div id="workshop-booking-form" style="display:none; margin-top:20px;">
+            <h3>Workshop Booking</h3>
+            <div style="margin-bottom:10px;">
+                <label>Workshop:</label>
+                <select style="padding:8px; width:100%;">
+                    <option>Workshop A (Mechanical)</option>
+                    <option>Workshop B (Electrical)</option>
+                    <option>Computer Lab 1</option>
+                    <option>Computer Lab 2</option>
+                    <option>Construction Yard</option>
+                    <option>Electronics Lab</option>
+                </select>
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Date:</label>
+                <input type="date" style="padding:8px; width:100%;">
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Time Slot:</label>
+                <select style="padding:8px; width:100%;">
+                    <option>8:00-10:00 AM</option>
+                    <option>10:00-12:00 PM</option>
+                    <option>1:00-3:00 PM</option>
+                    <option>3:00-5:00 PM</option>
+                </select>
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Project:</label>
+                <input type="text" placeholder="Project name" style="padding:8px; width:100%;">
+            </div>
+            <button class="btn">Submit Booking</button>
+        </div>
+
+        <div id="project-form" style="display:none; margin-top:20px;">
+            <h3>Submit Project Results</h3>
+            <div style="margin-bottom:10px;">
+                <label>Class:</label>
+                <select style="padding:8px; width:100%;">
+                    <option>ME-2023 - Mechanical Engineering</option>
+                    <option>CS-2023 - Computer Science</option>
+                    <option>EE-2023 - Electrical Engineering</option>
+                    <option>CON-2023 - Construction</option>
+                </select>
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Project:</label>
+                <input type="text" placeholder="Project name" style="padding:8px; width:100%;">
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Results Documentation:</label>
+                <input type="file" style="margin:10px 0;" accept=".pdf,.docx,.zip,.rar">
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Project Photos:</label>
+                <input type="file" style="margin:10px 0;" accept="image/*" multiple>
+            </div>
+            <button class="btn">Submit Project</button>
+        </div>
+
+        <div id="equipment-form" style="display:none; margin-top:20px;">
+            <h3>Equipment Request</h3>
+            <div style="margin-bottom:10px;">
+                <label>Equipment Type:</label>
+                <select style="padding:8px; width:100%;">
+                    <option>Mechanical Tools</option>
+                    <option>Electrical Components</option>
+                    <option>Computer Hardware</option>
+                    <option>Construction Materials</option>
+                    <option>Electronics</option>
+                    <option>Other</option>
+                </select>
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Specific Item:</label>
+                <input type="text" placeholder="Item name/model" style="padding:8px; width:100%;">
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Quantity:</label>
+                <input type="number" min="1" value="1" style="padding:8px; width:100%;">
+            </div>
+            <div style="margin-bottom:10px;">
+                <label>Urgency:</label>
+                <select style="padding:8px; width:100%;">
+                    <option>Normal</option>
+                    <option>High</option>
+                    <option>Immediate</option>
+                </select>
+            </div>
+            <textarea placeholder="Additional details..." style="width:100%; padding:8px; min-height:100px;"></textarea>
+            <button class="btn">Submit Request</button>
+        </div>
+    </div>
+
+    <!-- HOD DASHBOARD -->
+    <div class="section" id="hod-dashboard">
+        <h2>HOD Dashboard</h2>
+        
+        <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+            <button class="btn" onclick="showHodSection('workshops')">Workshop Management</button>
+            <button class="btn" onclick="showHodSection('equipment')">Equipment Inventory</button>
+            <button class="btn" onclick="showHodSection('projects')">Project Oversight</button>
+            <button class="btn" onclick="showHodSection('announcements')">Announcements</button>
+        </div>
+        
+        <!-- Workshop Management Section -->
+        <div id="hod-workshops">
+            <h3>Workshop Management</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Workshop</th>
+                        <th>Status</th>
+                        <th>Today's Bookings</th>
+                        <th>Maintenance</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Workshop A (Mechanical)</td>
+                        <td><span class="status-indicator status-operational"></span> Operational</td>
+                        <td>3 bookings (8AM, 11AM, 2PM)</td>
+                        <td>Next: 2023-06-15</td>
+                        <td>
+                            <button class="btn">View Calendar</button>
+                            <button class="btn-warning">Schedule Maintenance</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Computer Lab 2</td>
+                        <td><span class="status-indicator status-maintenance"></span> Maintenance</td>
+                        <td>Closed</td>
+                        <td>Until: 2023-05-22</td>
+                        <td>
+                            <button class="btn">Update Status</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h4 style="margin-top:20px;">Pending Booking Requests</h4>
+            <div class="workshop-booking">
+                <p><strong>Eng. Rodriguez - Workshop A</strong></p>
+                <p>Date: 2023-05-18 | Time: 10:00-12:00</p>
+                <p>Project: Steam Turbine Assembly</p>
+                <button class="btn-success">Approve</button>
+                <button class="btn-warning">Deny</button>
+            </div>
+        </div>
+        
+        <!-- Equipment Inventory Section -->
+        <div id="hod-equipment" style="display:none;">
+            <h3>Equipment Inventory</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Equipment</th>
+                        <th>Workshop</th>
+                        <th>Total</th>
+                        <th>Available</th>
+                        <th>Condition</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>3D Printers</td>
+                        <td>Computer Lab 1</td>
+                        <td>5</td>
+                        <td>3</td>
+                        <td>4 Operational, 1 Maintenance</td>
+                        <td>
+                            <button class="btn">Order More</button>
+                            <button class="btn-warning">Schedule Repair</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>CNC Machines</td>
+                        <td>Workshop A</td>
+                        <td>3</td>
+                        <td>1</td>
+                        <td>2 Operational, 1 Maintenance</td>
+                        <td>
+                            <button class="btn">Order Parts</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h4 style="margin-top:20px;">Equipment Requests</h4>
+            <div style="background-color:#f8f8f8; padding:15px; border-radius:5px; margin-bottom:10px;">
+                <p><strong>Prof. Chen - Computer Lab 2</strong></p>
+                <p>Request: 5 Arduino Kits</p>
+                <p>Reason: New IoT curriculum</p>
+                <button class="btn-success">Approve</button>
+                <button class="btn-warning">Deny</button>
+            </div>
+        </div>
+        
+        <!-- Project Oversight Section -->
+        <div id="hod-projects" style="display:none;">
+            <h3>Project Oversight</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Project</th>
+                        <th>Class</th>
+                        <th>Instructor</th>
+                        <th>Start Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Steam Turbine Assembly</td>
+                        <td>ME-2023</td>
+                        <td>Eng. Rodriguez</td>
+                        <td>2023-05-01</td>
+                        <td>In Progress</td>
+                        <td>
+                            <button class="btn">View Details</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Web App Development</td>
+                        <td>CS-2023</td>
+                        <td>Prof. Chen</td>
+                        <td>2023-04-15</td>
+                        <td>Completed</td>
+                        <td>
+                            <button class="btn">Evaluate</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h4 style="margin-top:20px;">Project Submissions</h4>
+            <div style="background-color:#f8f8f8; padding:15px; border-radius:5px;">
+                <p><strong>Circuit Design - EE-2023</strong></p>
+                <p>Instructor: Dr. Wilson | Submitted: 2023-05-15</p>
+                <button class="btn">Review Documentation</button>
+                <button class="btn-success">Approve</button>
+            </div>
+        </div>
+        
+        <!-- Announcements Section -->
+        <div id="hod-announcements" style="display:none;">
+            <h3>Department Announcements</h3>
+            <div style="margin-bottom:20px;">
+                <label>Announcement Type:</label>
+                <select style="padding:8px;">
+                    <option>General</option>
+                    <option>Safety Notice</option>
+                    <option>Workshop Update</option>
+                    <option>Meeting</option>
+                </select>
+            </div>
+            <textarea id="announcement-text" placeholder="Enter your announcement here..." style="width:100%; padding:8px; min-height:100px;"></textarea>
+            <div style="margin-top:10px;">
+                <button class="btn">Preview</button>
+                <button class="btn-success">Publish</button>
+            </div>
+            
+            <h4 style="margin-top:30px;">Recent Announcements</h4>
+            <div style="background-color:#f8f8f8; padding:15px; border-radius:5px;">
+                <p><strong>May 15 - Safety Inspection</strong></p>
+                <p>All workshops will undergo safety inspections next week. Please ensure all equipment is properly stored.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div id="login-form" style="display:none;">
+        <div class="login-container">
+            <h3>Login Required</h3>
+            <div style="margin-bottom:15px;">
+                <label style="display:block; text-align:left; margin-bottom:5px;">Username:</label>
+                <input type="text" id="username-input" placeholder="Enter username" style="width:100%; padding:8px;">
+            </div>
+            <div style="margin-bottom:15px;">
+                <label style="display:block; text-align:left; margin-bottom:5px;">Password:</label>
+                <input type="password" id="password-input" placeholder="Enter password" style="width:100%; padding:8px;">
+            </div>
+            <button class="btn" onclick="checkPassword()">Login</button>
+            <button class="btn-warning" onclick="closeLoginForm()">Cancel</button>
+            <p id="login-error" style="color:var(--warning-color); margin-top:10px; display:none;">Incorrect credentials!</p>
+        </div>
+    </div>
+
+    <script>
+        // Show initial section
+        document.addEventListener('DOMContentLoaded', function() {
+            navigateTo('dashboard');
+        });
+        
+        // Navigation function
+        function navigateTo(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).style.display = 'block';
+        }
+        
+        // Request access function (for protected sections)
+        function requestAccess(sectionId) {
+            document.getElementById('login-form').style.display = 'flex';
+            // Store the requested section to show after login
+            document.getElementById('login-form').dataset.requestedSection = sectionId;
+        }
+        
+        // Close login form
+        function closeLoginForm() {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('login-error').style.display = 'none';
+        }
+        
+        // Check password (simplified for demo)
+        function checkPassword() {
+            const username = document.getElementById('username-input').value;
+            const password = document.getElementById('password-input').value;
+            
+            // Demo credentials
+            if ((username === 'techinstructor' && password === 'workshop123') || 
+                (username === 'wess' && password === 'admin456')) {
+                
+                closeLoginForm();
+                const requestedSection = document.getElementById('login-form').dataset.requestedSection;
+                navigateTo(requestedSection);
+            } else {
+                document.getElementById('login-error').style.display = 'block';
+            }
+        }
+        
+        // Show form within sections
+        function showForm(formId) {
+            // Hide all forms first
+            ['workshop-booking-form', 'project-form', 'equipment-form'].forEach(id => {
+                document.getElementById(id).style.display = 'none';
+            });
+            
+            // Show requested form
+            document.getElementById(formId).style.display = 'block';
+        }
+        
+        // Show HOD section
+        function showHodSection(section) {
+            // Hide all HOD sections
+            ['workshops', 'equipment', 'projects', 'announcements'].forEach(sec => {
+                document.getElementById(`hod-${sec}`).style.display = 'none';
+            });
+            
+            // Show requested section
+            document.getElementById(`hod-${section}`).style.display = 'block';
+        }
+    </script>
+</body>
+</html>

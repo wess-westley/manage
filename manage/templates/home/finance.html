@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Financial System</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #27ae60;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Login Screen */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+        
+        .login-box {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            width: 400px;
+        }
+        
+        .login-box h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark-color);
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .login-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .error-message {
+            color: var(--accent-color);
+            margin-top: 1rem;
+            text-align: center;
+            display: none;
+        }
+        
+        /* Main Application */
+        .main-app {
+            display: none;
+            width: 100%;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1.5rem 0;
+        }
+        
+        .sidebar-header {
+            padding: 0 1.5rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-header h3 {
+            font-size: 1.2rem;
+        }
+        
+        .sidebar-header p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 0.3rem;
+        }
+        
+        .nav-menu {
+            margin-top: 1.5rem;
+        }
+        
+        .nav-item {
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-item.active {
+            background-color: var(--secondary-color);
+        }
+        
+        .nav-item i {
+            margin-right: 0.8rem;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .header h1 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 0.8rem;
+        }
+        
+        .logout-btn {
+            background: none;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+            margin-left: 1rem;
+        }
+        
+        /* Payment Form */
+        .payment-form {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-title {
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .form-col {
+            flex: 1;
+        }
+        
+        .student-search {
+            position: relative;
+        }
+        
+        .search-results {
+            position: absolute;
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            background: white;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+            z-index: 10;
+            display: none;
+        }
+        
+        .search-result-item {
+            padding: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        
+        .search-result-item:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .search-result-item img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 0.8rem;
+        }
+        
+        .student-details {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .student-details-content {
+            display: flex;
+            align-items: center;
+        }
+        
+        .student-details-content img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 1rem;
+        }
+        
+        .student-info h4 {
+            margin-bottom: 0.3rem;
+        }
+        
+        .student-info p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        /* Payment Categories */
+        .payment-categories {
+            margin-top: 1.5rem;
+        }
+        
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .category-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        
+        .category-item label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .category-item input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .payment-summary {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: #f0f8ff;
+            border-radius: 4px;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .total-row {
+            font-weight: bold;
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid #ddd;
+        }
+        
+        .form-actions {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: #ddd;
+            color: #333;
+        }
+        
+        /* Payments Table */
+        .payments-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .payments-table th, .payments-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .payments-table th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 500;
+        }
+        
+        .payments-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .student-cell {
+            display: flex;
+            align-items: center;
+        }
+        
+        .student-cell img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 0.8rem;
+        }
+        
+        .payment-categories-cell {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .category-badge {
+            background-color: #e1f5fe;
+            color: #0288d1;
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        
+        .action-btn {
+            padding: 0.4rem 0.8rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-right: 0.3rem;
+        }
+        
+        .view-btn {
+            background-color: #e3f2fd;
+            color: var(--secondary-color);
+        }
+        
+        .download-btn {
+            background-color: #e8f5e9;
+            color: var(--success-color);
+        }
+        
+        .table-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .search-box {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="container" id="login-container">
+        <div class="login-container">
+            <div class="login-box">
+                <h2>Financial Department Login</h2>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter your username">
+                </div>
+                <div class="form-group">
+                    <label for="employee-number">Employee Number</label>
+                    <input type="text" id="employee-number" placeholder="Enter your employee number">
+                </div>
+                <button class="login-btn" id="login-btn">Login</button>
+                <div class="error-message" id="error-message">
+                    Invalid credentials. Please try again.
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Application (hidden by default) -->
+    <div class="container main-app" id="main-app">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3>School Financial System</h3>
+                <p>Financial Department</p>
+            </div>
+            <div class="nav-menu">
+                <div class="nav-item active">
+                    <i>💵</i> Payment Management
+                </div>
+                <div class="nav-item">
+                    <i>📊</i> Reports
+                </div>
+                <div class="nav-item">
+                    <i>👥</i> Student Accounts
+                </div>
+                <div class="nav-item">
+                    <i>⚙️</i> Settings
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1>Student Payment Management</h1>
+                <div class="user-info">
+                    <img src="https://via.placeholder.com/40" alt="User">
+                    <span>John Doe (Finance Officer)</span>
+                    <button class="logout-btn" id="logout-btn">Logout</button>
+                </div>
+            </div>
+            
+            <!-- Payment Form -->
+            <div class="payment-form">
+                <h3 class="form-title">Record New Payment</h3>
+                <div class="form-row">
+                    <div class="form-col student-search">
+                        <label for="student-search">Search Student</label>
+                        <input type="text" id="student-search" placeholder="Enter registration number or name">
+                        <div class="search-results" id="search-results">
+                            <!-- Search results will be populated here -->
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <label for="payment-date">Payment Date</label>
+                        <input type="date" id="payment-date">
+                    </div>
+                </div>
+                
+                <div class="student-details" id="student-details">
+                    <div class="student-details-content">
+                        <img src="https://via.placeholder.com/60" alt="Student" id="student-img">
+                        <div class="student-info">
+                            <h4 id="student-name">John Student</h4>
+                            <p id="student-reg">Registration: ST2023001</p>
+                            <p id="student-class">Form 4 - Science Stream</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="payment-categories">
+                    <h4>Payment Categories</h4>
+                    <div class="category-grid">
+                        <div class="category-item">
+                            <label for="tuition">Tuition Fees</label>
+                            <input type="number" id="tuition" placeholder="0.00">
+                        </div>
+                        <div class="category-item">
+                            <label for="sports">Sports Fees</label>
+                            <input type="number" id="sports" placeholder="0.00">
+                        </div>
+                        <div class="category-item">
+                            <label for="transport">Transport Fees</label>
+                            <input type="number" id="transport" placeholder="0.00">
+                        </div>
+                        <div class="category-item">
+                            <label for="medical">Medical Fees</label>
+                            <input type="number" id="medical" placeholder="0.00">
+                        </div>
+                        <div class="category-item">
+                            <label for="remedial">Remedial Classes</label>
+                            <input type="number" id="remedial" placeholder="0.00">
+                        </div>
+                        <div class="category-item">
+                            <label for="other">Other Fees</label>
+                            <input type="number" id="other" placeholder="0.00">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="payment-summary">
+                    <div class="summary-row">
+                        <span>Tuition Fees:</span>
+                        <span id="tuition-summary">KES 0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Sports Fees:</span>
+                        <span id="sports-summary">KES 0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Transport Fees:</span>
+                        <span id="transport-summary">KES 0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Medical Fees:</span>
+                        <span id="medical-summary">KES 0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Remedial Classes:</span>
+                        <span id="remedial-summary">KES 0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Other Fees:</span>
+                        <span id="other-summary">KES 0.00</span>
+                    </div>
+                    <div class="summary-row total-row">
+                        <span>Total Amount:</span>
+                        <span id="total-summary">KES 0.00</span>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-col">
+                        <label for="payment-method">Payment Method</label>
+                        <select id="payment-method" class="form-control">
+                            <option value="cash">Cash</option>
+                            <option value="mpesa">M-Pesa</option>
+                            <option value="cheque">Cheque</option>
+                            <option value="bank">Bank Transfer</option>
+                        </select>
+                    </div>
+                    <div class="form-col">
+                        <label for="reference">Reference Number</label>
+                        <input type="text" id="reference" placeholder="Payment reference">
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button class="btn btn-secondary" id="clear-btn">Clear</button>
+                    <button class="btn btn-primary" id="submit-btn">Submit Payment</button>
+                </div>
+            </div>
+            
+            <!-- Payments Table -->
+            <div class="table-actions">
+                <div>
+                    <input type="text" class="search-box" placeholder="Search payments...">
+                </div>
+                <div>
+                    <button class="btn btn-primary">Export to Excel</button>
+                </div>
+            </div>
+            
+            <table class="payments-table">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Registration</th>
+                        <th>Class</th>
+                        <th>Payment Categories</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                        <th>Reference</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="student-cell">
+                                <img src="https://via.placeholder.com/40" alt="Student">
+                                <span>John Student</span>
+                            </div>
+                        </td>
+                        <td>ST2023001</td>
+                        <td>Form 4 - Science</td>
+                        <td>
+                            <div class="payment-categories-cell">
+                                <span class="category-badge">Tuition: 15,000</span>
+                                <span class="category-badge">Sports: 2,000</span>
+                            </div>
+                        </td>
+                        <td>KES 17,000</td>
+                        <td>2023-05-15</td>
+                        <td>PAY20230515123</td>
+                        <td>
+                            <button class="action-btn view-btn">View</button>
+                            <button class="action-btn download-btn">Download</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="student-cell">
+                                <img src="https://via.placeholder.com/40" alt="Student">
+                                <span>Mary Student</span>
+                            </div>
+                        </td>
+                        <td>ST2023002</td>
+                        <td>Form 3 - Arts</td>
+                        <td>
+                            <div class="payment-categories-cell">
+                                <span class="category-badge">Tuition: 12,000</span>
+                                <span class="category-badge">Transport: 5,000</span>
+                                <span class="category-badge">Medical: 1,500</span>
+                            </div>
+                        </td>
+                        <td>KES 18,500</td>
+                        <td>2023-05-14</td>
+                        <td>PAY20230514234</td>
+                        <td>
+                            <button class="action-btn view-btn">View</button>
+                            <button class="action-btn download-btn">Download</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="student-cell">
+                                <img src="https://via.placeholder.com/40" alt="Student">
+                                <span>Peter Student</span>
+                            </div>
+                        </td>
+                        <td>ST2023003</td>
+                        <td>Form 2 - General</td>
+                        <td>
+                            <div class="payment-categories-cell">
+                                <span class="category-badge">Tuition: 10,000</span>
+                                <span class="category-badge">Remedial: 3,000</span>
+                            </div>
+                        </td>
+                        <td>KES 13,000</td>
+                        <td>2023-05-13</td>
+                        <td>PAY20230513345</td>
+                        <td>
+                            <button class="action-btn view-btn">View</button>
+                            <button class="action-btn download-btn">Download</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Sample student data
+        const students = [
+            {
+                id: 1,
+                regNumber: 'ST2023001',
+                name: 'John Student',
+                form: 'Form 4',
+                stream: 'Science Stream',
+                profilePic: 'https://via.placeholder.com/60'
+            },
+            {
+                id: 2,
+                regNumber: 'ST2023002',
+                name: 'Mary Student',
+                form: 'Form 3',
+                stream: 'Arts Stream',
+                profilePic: 'https://via.placeholder.com/60'
+            },
+            {
+                id: 3,
+                regNumber: 'ST2023003',
+                name: 'Peter Student',
+                form: 'Form 2',
+                stream: 'General Stream',
+                profilePic: 'https://via.placeholder.com/60'
+            },
+            {
+                id: 4,
+                regNumber: 'ST2023004',
+                name: 'Sarah Student',
+                form: 'Form 1',
+                stream: 'Science Stream',
+                profilePic: 'https://via.placeholder.com/60'
+            }
+        ];
+
+        // Sample financial officers
+        const financialOfficers = [
+            {
+                username: 'finance1',
+                employeeNumber: 'EMP2023001',
+                name: 'John Doe'
+            },
+            {
+                username: 'finance2',
+                employeeNumber: 'EMP2023002',
+                name: 'Jane Smith'
+            }
+        ];
+
+        // DOM Elements
+        const loginContainer = document.getElementById('login-container');
+        const mainApp = document.getElementById('main-app');
+        const loginBtn = document.getElementById('login-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const errorMessage = document.getElementById('error-message');
+        const usernameInput = document.getElementById('username');
+        const employeeNumberInput = document.getElementById('employee-number');
+        const studentSearch = document.getElementById('student-search');
+        const searchResults = document.getElementById('search-results');
+        const studentDetails = document.getElementById('student-details');
+        const studentImg = document.getElementById('student-img');
+        const studentName = document.getElementById('student-name');
+        const studentReg = document.getElementById('student-reg');
+        const studentClass = document.getElementById('student-class');
+        
+        // Payment category inputs
+        const tuitionInput = document.getElementById('tuition');
+        const sportsInput = document.getElementById('sports');
+        const transportInput = document.getElementById('transport');
+        const medicalInput = document.getElementById('medical');
+        const remedialInput = document.getElementById('remedial');
+        const otherInput = document.getElementById('other');
+        
+        // Summary elements
+        const tuitionSummary = document.getElementById('tuition-summary');
+        const sportsSummary = document.getElementById('sports-summary');
+        const transportSummary = document.getElementById('transport-summary');
+        const medicalSummary = document.getElementById('medical-summary');
+        const remedialSummary = document.getElementById('remedial-summary');
+        const otherSummary = document.getElementById('other-summary');
+        const totalSummary = document.getElementById('total-summary');
+        
+        // Form buttons
+        const clearBtn = document.getElementById('clear-btn');
+        const submitBtn = document.getElementById('submit-btn');
+
+        // Event Listeners
+        loginBtn.addEventListener('click', handleLogin);
+        logoutBtn.addEventListener('click', handleLogout);
+        studentSearch.addEventListener('input', handleStudentSearch);
+        clearBtn.addEventListener('click', clearForm);
+        
+        // Add input event listeners to all payment fields
+        [tuitionInput, sportsInput, transportInput, medicalInput, remedialInput, otherInput].forEach(input => {
+            input.addEventListener('input', updatePaymentSummary);
+        });
+
+        // Login function
+        function handleLogin() {
+            const username = usernameInput.value.trim();
+            const employeeNumber = employeeNumberInput.value.trim();
+            
+            // Validate inputs
+            if (!username || !employeeNumber) {
+                showError('Please enter both username and employee number');
+                return;
+            }
+            
+            // Check if officer exists
+            const officer = financialOfficers.find(o => 
+                o.username === username && o.employeeNumber === employeeNumber
+            );
+            
+            if (officer) {
+                // Successful login
+                loginContainer.style.display = 'none';
+                mainApp.style.display = 'flex';
+                
+                // Update user info in the main app
+                document.querySelector('.user-info span').textContent = `${officer.name} (Finance Officer)`;
+                
+                // Set today's date as default
+                document.getElementById('payment-date').valueAsDate = new Date();
+                
+                // Generate a default reference number
+                document.getElementById('reference').value = generateReferenceNumber();
+            } else {
+                showError('Invalid credentials. Access denied.');
+            }
+        }
+        
+        // Logout function
+        function handleLogout() {
+            loginContainer.style.display = 'flex';
+            mainApp.style.display = 'none';
+            clearForm();
+            usernameInput.value = '';
+            employeeNumberInput.value = '';
+            hideError();
+        }
+        
+        // Student search function
+        function handleStudentSearch() {
+            const searchTerm = studentSearch.value.trim().toLowerCase();
+            
+            if (searchTerm.length < 2) {
+                searchResults.style.display = 'none';
+                return;
+            }
+            
+            // Filter students
+            const filteredStudents = students.filter(student => 
+                student.name.toLowerCase().includes(searchTerm) || 
+                student.regNumber.toLowerCase().includes(searchTerm)
+            );
+            
+            // Display results
+            if (filteredStudents.length > 0) {
+                searchResults.innerHTML = '';
+                filteredStudents.forEach(student => {
+                    const item = document.createElement('div');
+                    item.className = 'search-result-item';
+                    item.innerHTML = `
+                        <img src="${student.profilePic}" alt="${student.name}">
+                        <div>
+                            <div>${student.name}</div>
+                            <small>${student.regNumber} • ${student.form} ${student.stream}</small>
+                        </div>
+                    `;
+                    item.addEventListener('click', () => selectStudent(student));
+                    searchResults.appendChild(item);
+                });
+                searchResults.style.display = 'block';
+            } else {
+                searchResults.style.display = 'none';
+            }
+        }
+        
+        // Select student function
+        function selectStudent(student) {
+            studentSearch.value = student.name;
+            searchResults.style.display = 'none';
+            
+            // Update student details
+            studentImg.src = student.profilePic;
+            studentName.textContent = student.name;
+            studentReg.textContent = `Registration: ${student.regNumber}`;
+            studentClass.textContent = `${student.form} - ${student.stream}`;
+            
+            // Show student details
+            studentDetails.style.display = 'block';
+        }
+        
+        // Update payment summary
+        function updatePaymentSummary() {
+            const tuition = parseFloat(tuitionInput.value) || 0;
+            const sports = parseFloat(sportsInput.value) || 0;
+            const transport = parseFloat(transportInput.value) || 0;
+            const medical = parseFloat(medicalInput.value) || 0;
+            const remedial = parseFloat(remedialInput.value) || 0;
+            const other = parseFloat(otherInput.value) || 0;
+            
+            // Update individual summaries
+            tuitionSummary.textContent = `KES ${tuition.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+            sportsSummary.textContent = `KES ${sports.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+            transportSummary.textContent = `KES ${transport.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+            medicalSummary.textContent = `KES ${medical.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+            remedialSummary.textContent = `KES ${remedial.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+            otherSummary.textContent = `KES ${other.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+            
+            // Calculate and update total
+            const total = tuition + sports + transport + medical + remedial + other;
+            totalSummary.textContent = `KES ${total.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+        }
+        
+        // Clear form function
+        function clearForm() {
+            studentSearch.value = '';
+            studentDetails.style.display = 'none';
+            
+            // Clear all payment inputs
+            tuitionInput.value = '';
+            sportsInput.value = '';
+            transportInput.value = '';
+            medicalInput.value = '';
+            remedialInput.value = '';
+            otherInput.value = '';
+            
+            // Reset summaries
+            tuitionSummary.textContent = 'KES 0.00';
+            sportsSummary.textContent = 'KES 0.00';
+            transportSummary.textContent = 'KES 0.00';
+            medicalSummary.textContent = 'KES 0.00';
+            remedialSummary.textContent = 'KES 0.00';
+            otherSummary.textContent = 'KES 0.00';
+            totalSummary.textContent = 'KES 0.00';
+            
+            // Reset payment method and reference
+            document.getElementById('payment-method').value = 'cash';
+            document.getElementById('reference').value = generateReferenceNumber();
+        }
+        
+        // Helper function to show error message
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+        
+        // Helper function to hide error message
+        function hideError() {
+            errorMessage.style.display = 'none';
+        }
+        
+        // Helper function to generate reference number
+        function generateReferenceNumber() {
+            const now = new Date();
+            const datePart = now.getFullYear().toString().slice(-2) + 
+                           (now.getMonth() + 1).toString().padStart(2, '0') + 
+                           now.getDate().toString().padStart(2, '0');
+            const randomPart = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+            return `PAY${datePart}${randomPart}`;
+        }
+        
+        // Close search results when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!studentSearch.contains(e.target) && !searchResults.contains(e.target)) {
+                searchResults.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

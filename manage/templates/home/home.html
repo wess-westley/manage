@@ -1,0 +1,139 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Management System</title>
+    
+    <link rel="stylesheet" href="{% static 'styles/style.css' %}">
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="school-header">
+        <div class="logo-container">
+            <img src="school-logo.png" alt="School Logo" class="school-logo">
+            <h1 class="school-name">GREENWOOD HIGH SCHOOL</h1>
+        </div>
+        <marquee behavior="scroll" direction="left" class="header-marquee">
+            Admissions Open for 2023-2024 Academic Year • Annual Sports Day on June 15th • Parent-Teacher Meeting on May 25th
+        </marquee>
+    </header>
+
+    <!-- Main Content Area -->
+    <div class="main-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <nav class="department-nav">
+                <ul>
+                    <li><a href="{% url 'administration'%}">Administration</a></li>
+                    <li><a href="{% url 'finance'%}">Finance Department</a></li>
+                    <li><a href="{% url 'science'%}">Science Department</a></li>
+                    <li><a href="{%  url 'language' %}">Language Department</a></li>
+                    <li><a href="{%url 'math'%}">Mathematics Department</a></li>
+                    <li><a href="{%url 'human'%}">Humanities Department</a></li>
+                    <li><a href="{%url 'sports'%}">Sports & Entertainment</a></li>
+                    <li><a href="{%url 'student'%}">students</a></li>
+                    <li><a href="{%url 'techniques'%}">technicals</a></li>
+
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content">
+            <!-- Department Overview Section -->
+            <section class="department-overview">
+                <h2>Department Overview</h2>
+                
+                    <!-- Administration Card -->
+                    <div class="department-card" id="administration">
+                        <h3>Administration</h3>
+                        <p><strong>Staff:</strong> <span class="staff-count">15</span></p>
+                        <p><strong>Students:</strong> <span class="student-count">1,250</span></p>
+                    </div>
+                    
+                    <!-- Finance Card -->
+                    <div class="department-card" id="finance">
+                        <h3>Finance Department</h3>
+                        <p><strong>Staff:</strong> <span class="staff-count">8</span></p>
+                        <p><strong>Students:</strong> <span class="student-count">1,250</span></p>
+                    </div>
+                    
+                    <!-- Science Card -->
+                    <div class="department-card" id="science">
+                        <h3>Science Department</h3>
+                        <p><strong>Staff:</strong> <span class="staff-count">22</span></p>
+                        <p><strong>Students:</strong> <span class="student-count">850</span></p>
+                    </div>
+                    
+                    <!-- Language Card -->
+                    <div class="department-card" id="language">
+                        <h3>Language Department</h3>
+                        <p><strong>Staff:</strong> <span class="staff-count">18</span></p>
+                        <p><strong>Students:</strong> <span class="student-count">1,100</span></p>
+                    </div>
+                    
+                    <!-- Math Card -->
+                    <div class="department-card" id="math">
+                        <h3>Mathematics Department</h3>
+                        <p><strong>Staff:</strong> <span class="staff-count">15</span></p>
+                        <p><strong>Students:</strong> <span class="student-count">950</span></p>
+                    </div>
+                    
+                    <!-- Humanities Card -->
+                    <div class="department-card" id="humanities">
+                        <h3>Humanities Department</h3>
+                        <p><strong>Staff:</strong> <span class="staff-count">12</span></p>
+                        <p><strong>Students:</strong> <span class="student-count">700</span></p>
+                    </div>
+                    
+                    <!-- Sports Card -->
+                    <div class="department-card" id="sports">
+                        <h3>Sports & Entertainment</h3>
+                        <p><strong>Staff:</strong> <span class="staff-count">10</span></p>
+                        <p><strong>Students:</strong> <span class="student-count">600</span></p>
+                        
+                    </div>
+                
+                    <div class="department-card" id="student">
+                        <h3>students</h3>
+                        
+                        <p><strong>Students:</strong> <span class="student-count"></span></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Performance Projection -->
+            <section class="performance-projection">
+                <h2 class="wess">School Performance Projection</h2>
+                <div class="chart-container">
+                    <!-- This would be replaced with actual chart from database -->
+                    <div class="chart-placeholder">
+                        [Performance Chart Data from Database]
+                    </div>
+                </div>
+            </section>
+
+            <!-- Student Population Projection -->
+            <section class="student-projection">
+                <h2 class="wess">Student Population Projection</h2>
+                <div class="chart-container">
+                    <!-- This would be replaced with actual chart from database -->
+                    <div class="chart-placeholder">
+                        [Student Population Chart Data from Database]
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="school-footer">
+        <marquee behavior="scroll" direction="left">
+            Contact Us: admin@greenwoodhigh.edu • Phone: +123 456 7890 • Address: 123 Education Street, Learning City
+        </marquee>
+        <p>&copy; 2023 Greenwood High School. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>

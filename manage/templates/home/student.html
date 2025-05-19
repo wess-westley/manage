@@ -1,0 +1,1757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+   
+
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, var(--primary-color), var(--dark-color));
+        }
+
+        .login-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-form h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--dark-color);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .login-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .reset-link {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .reset-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .student-container {
+            display: none;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: var(--dark-color);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            padding: 1rem;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 0.75rem;
+        }
+
+        .sidebar-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-menu i {
+            margin-right: 0.75rem;
+            font-size: 1.25rem;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 1.5rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            color: var(--dark-color);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 0.75rem;
+        }
+
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+        }
+
+        .fee-balance {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 1rem 0;
+        }
+
+        .positive {
+            color: var(--success-color);
+        }
+
+        .negative {
+            color: var(--danger-color);
+        }
+
+        .fee-progress {
+            height: 10px;
+            background-color: #eee;
+            border-radius: 5px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary-color);
+            border-radius: 5px;
+        }
+
+        .fee-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        .action-btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        .payment-methods {
+            margin-top: 1.5rem;
+        }
+
+        .payment-method {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+        }
+
+        .payment-method i {
+            margin-right: 0.75rem;
+            font-size: 1.5rem;
+        }
+
+        .payment-method.active {
+            border-color: var(--primary-color);
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.25rem;
+            color: var(--dark-color);
+        }
+
+        .subject-list {
+            list-style: none;
+        }
+
+        .subject-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .subject-actions a {
+            color: var(--primary-color);
+            text-decoration: none;
+            margin-left: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .evaluation-form {
+            margin-top: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .complaint-item, .leave-item {
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .complaint-header, .leave-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background-color: rgba(241, 196, 15, 0.1);
+            color: var(--warning-color);
+        }
+
+        .status-resolved {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: var(--success-color);
+        }
+
+        .status-approved {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: var(--success-color);
+        }
+
+        .status-rejected {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--danger-color);
+        }
+
+        .new-complaint-btn, .new-leave-btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .leader-actions {
+            margin-top: 1.5rem;
+        }
+          #clearanceSection {
+            
+            margin-left: 250px;
+            width: 85%;
+            height:auto;
+        }
+        .section {
+            background-color: #f9f9f9;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        .section-header h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        table {
+            border:2;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        th {
+            background-color: #f5f5f5;
+        }
+        input {
+            padding: 8px;
+            width: 50%;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .action-btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+        .stamp {
+            margin-top: 30px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .notification-form textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-height: 100px;
+            margin-bottom: 1rem;
+            resize: vertical;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .dashboard-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                
+                z-index: 100;
+                height: 100vh;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .dashboard-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark-color);
+            margin-right: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Login Page -->
+    <div class="login-container" id="loginPage">
+        <div class="login-form">
+            <h2>Student Portal Login</h2>
+            <div class="form-group">
+                <label for="regNumber">Registration Number</label>
+                <input type="text" id="regNumber" placeholder="Enter your registration number">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter your password">
+            </div>
+            <button class="login-btn">Login</button>
+            <div class="reset-link">
+                <a href="#">Forgot password? Reset here</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Portal -->
+    <div class="student-container" id="studentPortal">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <img src="" alt="Student">
+                <h3 id='name'>westley<br><small>#STD2023001</small></h3>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="#" class="active" onclick="showSection('dashboard')"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="#" onclick="showSection('fees')"><i class="fas fa-money-bill-wave"></i> Fee Payment</a></li>
+                <li><a href="#" onclick="showSection('subjects')"><i class="fas fa-book"></i> Subjects</a></li>
+                <li><a href="#" onclick="showSection('evaluation')"><i class="fas fa-clipboard-check"></i> Teacher Evaluation</a></li>
+                <li><a href="#" onclick="showSection('complaints')"><i class="fas fa-exclamation-circle"></i> Complaints</a></li>
+                <li><a href ="#" onclick="showSection('results')"><i class="fas fa-chart-line"></i> results</a></li>
+                <li><a href ="#" onclick="showSection('clearance')"><i class="fas fa-file-signature"></i> Clearance</a></li>
+                <li><a href="#" onclick="showSection('leave')"><i class="fas fa-calendar-minus"></i> Leave Application</a></li>
+                <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li> 
+            </ul>
+        </div>
+        <div class="main-content">
+            <div class="header">
+                <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+                <h1 id="sectionTitle">Dashboard</h1>
+                <div class="user-info">
+                    <img id="picture"src="https://lh3.googleusercontent.com/a/ACg8ocIA9cJCyZBRTC19TT5NdxKcPWi5wrVES_MWJS2MHnDszBBZynGZ=s288-c-no" alt="Student">
+                    <span id="name">westley kanyora</span>
+                </div>
+            </div>
+
+            <!-- Dashboard Section -->
+            <div id="dashboardSection">
+                <div class="dashboard-cards">
+                    <div class="card">
+                      -  <h3>Fee Balance</h3>
+                        <div class="fee-balance negative" id ="balance">$0.00</div>
+                        <p>Remaining balance for Term 2</p>
+                        <div class="fee-progress">
+                            <div class="progress-bar" style="width: 100%"></div>
+                        </div>
+                        <div class="feedetails">
+                            <span>Paid: $1,300.00</span>
+                            <span>Total: $1,300.00</span>
+                        </div>
+                        <a href="#" class="action-btn" onclick="showSection('fees')">Pay Fees</a>
+                    </div>
+                    <div class="card">
+                        <h3>Current Subjects</h3>
+                        <ul class="subject-list">
+                            <li>Mathematics</li>
+                            <li>English</li>
+                            <li>Physics</li>
+                            <li>Chemistry</li>
+                            <li>Biology</li>
+                        </ul>
+                        <a href="#" class="action-btn" onclick="showSection('subjects')">Manage Subjects</a>
+                    </div>
+                    <div class="card">
+                        <h3>Upcoming Exams</h3>
+                        <p>Mid-Term Exams: May 15-19</p>
+                        <p>End-Term Exams: July 10-14</p>
+                        <a href="javascript:void(0);" class="action-btn" id="reprint" onclick="downloadExamCard()">Download Exam Card</a>
+
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <h2>Recent Notifications</h2>
+                    </div>
+                    <div class="notification-item">
+                        <h4>Sports Day Cancellation</h4>
+                        <p>Due to unforeseen circumstances, the sports day scheduled for May 5th has been postponed. A new date will be communicated soon.</p>
+                        <small>Posted: May 3, 2023 by Admin</small>
+                    </div>
+                    <div class="notification-item">
+                        <h4>Library Closure</h4>
+                        <p>The school library will be closed on May 8th for inventory. We apologize for any inconvenience.</p>
+                        <small>Posted: May 1, 2023 by Librarian</small>
+                    </div>
+                </div>
+            </div>
+<!-- Fee Payment Section -->
+<div id="feesSection" style="display: none;">
+    <div class="section">
+        <div class="section-header">
+            <h2>Fee Payment</h2>
+        </div>
+        <div class="fee-balance negative" id="balance">$450.00</div>
+        <p>Remaining balance for Term 2</p>
+        <div class="fee-progress">
+            <div class="progress-bar" style="width: 65%"></div>
+        </div>
+        <div class="fee-details">
+            <span>Paid: $850.00</span>
+            <span>Total: $1,300.00</span>
+        </div>
+        
+        <a href="#" class="action-btn" onclick="downloadFeeStructure()">Download Fee Structure</a>
+    </div>
+
+    <div class="section">
+        <div class="section-header">
+            <h2>Make Payment</h2>
+        </div>
+        <div class="form-group">
+            <label for="amount">Amount to Pay ($)</label>
+            <input type="number" id="amount" value="450" min="100" max="">
+        </div>
+        <div class="payment-methods">
+            <h3>Payment Method</h3>
+            <div class="payment-method active">
+                <i class="fas fa-mobile-alt"></i>
+                <span>M-Pesa</span>
+            </div>
+            <div class="payment-method">
+                <i class="fas fa-university"></i>
+                <span>Bank Transfer</span>
+            </div>
+            <div class="payment-method">
+                <i class="fas fa-credit-card"></i>
+                <span>Credit Card</span>
+            </div>
+        </div>
+
+        <button class="submit-btn" onclick="javascript:void(0); processPayment()">Proceed to Payment</button>
+
+    </div>
+
+    <div class="section">
+        <div class="section-header">
+            <h2>Payment History</h2>
+        </div>
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background-color: #f5f5f5;">
+                    <th style="padding: 0.75rem; text-align: left;">Date</th>
+                    <th style="padding: 0.75rem; text-align: left;">Amount</th>
+                    <th style="padding: 0.75rem; text-align: left;">Method</th>
+                    <th style="padding: 0.75rem; text-align: left;">Receipt</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 0.75rem;">Apr 15, 2023</td>
+                    <td style="padding: 0.75rem;">$500.00</td>
+                    <td style="padding: 0.75rem;">M-Pesa</td>
+                    <td style="padding: 0.75rem;"><a href="#" style="color: var(--primary-color);" onclick="downloadFeeStructure(this)">Download</a></td>
+                </tr>
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 0.75rem;">Mar 1, 2023</td>
+                    <td style="padding: 0.75rem;">$350.00</td>
+                    <td style="padding: 0.75rem;">Bank Transfer</td>
+                    <td style="padding: 0.75rem;"><a href="#" style="color: var(--primary-color);" onclick="downloadFeeStructure(this)">Download</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+            <!-- Subjects Section -->
+            <div id="subjectsSection" style="display: none;" style='margin-left: 50px;'>
+                <div class="section">
+                    <div class="section-header">
+                        <h2>My Subjects</h2>
+                    </div>
+                    <ul class="subject-list" id="subjectList">
+                        <li class="subject-item">
+                            <span>Mathematics</span>
+                            <div class="subject-actions">
+                                <button onclick="clearSubject(this, 'Mathematics')">Drop</button>
+                            </div>
+                        </li>
+                        <li class="subject-item">
+                            <span>English</span>
+                            <div class="subject-actions">
+                                <button onclick="clearSubject(this, 'English')">Drop</button>
+                            </div>
+                        </li>
+                        <li class="subject-item">
+                            <span>Physics</span>
+                            <div class="subject-actions">
+                                <button onclick="clearSubject(this, 'Physics')">Drop</button>
+                            </div>
+                        </li>
+                        <li class="subject-item">
+                            <span>Chemistry</span>
+                            <div class="subject-actions">
+                                <button onclick="clearSubject(this, 'Chemistry')">Drop</button>
+                            </div>
+                        </li>
+                        <li class="subject-item">
+                            <span>Biology</span>
+                            <div class="subject-actions">
+                                <button onclick="clearSubject(this, 'Biology')">Drop</button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <h2>Register New Subject</h2>
+                    </div>
+                    <div class="form-group">
+                        <label for="newSubject">Select Subject</label>
+                        <select id="newSubject">
+                            <option value="">-- Select Subject --</option>
+                            <option value="History">History</option>
+                            <option value="Geography">Geography</option>
+                            <option value="Business Studies">Business Studies</option>
+                            <option value="Computer Science">Computer Science</option>
+                        </select>
+                    </div>
+                    <button class="submit-btn" onclick="registerSubject()">Register Subject</button>
+                </div>
+            </div>
+        </div>
+        
+
+<div id="clearanceSection" style="display: none; margin-left:300px">
+    <div class="section">
+        <div class="section-header">
+            <h2>Clearance Form</h2>
+        </div>
+
+        <label>Name</label>
+        <input id="jina" placeholder="Enter your name as registered"><br>
+
+        <label>Registration Number</label>
+        <input id="regi" placeholder="Enter registration number">
+
+        <table border='2'>
+            <thead>
+                <tr>
+                    <th>Section</th>
+                    <th>Status</th>
+                    <th>Signature</th>
+                    <th>sign</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Library Clearance</td>
+                    <td style="color: green;">......</td>
+                    <td>Librarian Signature</td>
+                    <td>...</td>
+                    </tr>
+                <tr>
+                    <td>Finance Section</td>
+                    <td style="color: green;">.....</td>
+                    <td>Finance Officer Signature</td>
+                    <td>...</td>
+                </tr>
+                <tr>
+                    <td>Games Department</td>
+                    <td style="color: green;">.....</td>
+                    <td>Games Chief Signature</td>
+                    <td>....</td>
+                </tr>
+                <tr>
+                    <td>Registrar Clearance</td>
+                    <td style="color: green;">......</td>
+                    <td>Registrar Signature</td>
+                    <td>...</td>
+                </tr>
+            </tbody>
+        </table>
+        <table border='2'>
+            <tbody>
+            <tr>
+                <th>Subjects</th>
+                <th>Teachers</th>
+                <th>Signatures</th>
+                <th>Comments</th>
+            </tr>
+            <tr>
+                <td>Mathematics</td>
+                <td><input placeholder="Teacher's Name" /></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>English</td>
+                <td><input placeholder="Teacher's Name" /></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Kiswahili</td>
+                <td><input placeholder="Teacher's Name" /></td>
+                <td><input ></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Biology</td>
+                <td><input placeholder="Teacher's Name" /></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Chemistry</td>
+                <td><input placeholder="Teacher's Name" /></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><input placeholder="Humanities Subject" /></td>
+                <td><input placeholder="Teacher's Name" /></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><input placeholder="Technical Subject" /></td>
+                <td><input placeholder="Teacher's Name" /></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+        </table>
+        
+
+        <div class="stamp">
+            <p>__________________________</p>
+            <p>Principal / Registrar Stamp</p>
+        </div>
+
+        <div id="errorMessage" class="error"></div>
+        
+
+        <a href="#" class="action-btn" onclick="downloadClearance(event)">Download Clearance</a>
+
+
+
+    </div>
+</div>
+        <!-- Results Section -->
+        <div id="resultsSection" style="display: none; margin-left:250px">
+            <div class="section">
+                <div class="section-header">
+                    <h2>Academic Results</h2>
+                </div>
+                 
+        
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background-color: #f5f5f5;">
+                            <th style="padding: 0.75rem; text-align: left;">Subject</th>
+                            <th style="padding: 0.75rem; text-align: left;">Marks</th>
+                            <th style="padding: 0.75rem; text-align: left;">Grade</th>
+                            <th style="padding: 0.75rem; text-align: left;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsTableBody">
+                        
+                        <tr style="border-bottom: 1px solid #eee;">
+                            <td style="padding: 0.75rem;">Mathematics</td>
+                            <td style="padding: 0.75rem;">88</td>
+                            <td style="padding: 0.75rem;">A</td>
+                            <td style="padding: 0.75rem; color: green;">Pass</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #eee;">
+                            <td style="padding: 0.75rem;">Biology</td>
+                            <td style="padding: 0.75rem;">72</td>
+                            <td style="padding: 0.75rem;">B+</td>
+                            <td style="padding: 0.75rem; color: green;">Pass</td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+        
+            <div class="section">
+                <div class="section-header">
+                    <h2>Result Summary</h2>
+                </div>
+                <div class="result-summary">
+                    <p>Total Subjects: <strong>6</strong></p>
+                    <p>Average Marks: <strong>78.5</strong></p>
+                    <p>Overall Grade: <strong>B+</strong></p>
+                    <p>Status: <strong style="color: green;">Pass</strong></p>
+                </div>
+                <a href="#" class="action-btn" onclick="downloadResults()">Download Transcript</a>
+            </div>
+        </div>
+        
+
+            
+<div id="evaluationSection" style="display: none; margin-left:250px;">
+    <div class="section">
+        <div class="section-header">
+            <h2>Evaluate Teachers</h2>
+        </div>
+        <div class="evaluation-form">
+            <div class="form-group">
+                <label for="teacherSelect">Select Teacher</label>
+                <select id="teacherSelect">
+                    <option value="">-- Select Teacher --</option>
+                    <option value="math">Mr. Johnson (Mathematics)</option>
+                    <option value="english">Mrs. Anderson (English)</option>
+                    <option value="physics">Mr. Kamau (Physics)</option>
+                    <option value="chemistry">Ms. Wanjiku (Chemistry)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="rating">Rating (1-5)</label>
+                <select id="rating">
+                    <option value="1">1 - Poor</option>
+                    <option value="2">2 - Fair</option>
+                    <option value="3">3 - Good</option>
+                    <option value="4">4 - Very Good</option>
+                    <option value="5">5 - Excellent</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="comments">Comments</label>
+                <textarea id="comments" placeholder="Enter your comments about the teacher..."></textarea>
+            </div>
+            <button class="submit-btn" onclick="submitEvaluation()">Submit Evaluation</button>
+        </div>
+    </div>
+
+    <!-- Evaluations Submitted Section -->
+    <div id="evaluationsCompleted" style="display: none;">
+        <div class="section">
+            <div class="section-header">
+                <h2>Submitted Evaluations</h2>
+            </div>
+            <div id="evaluationsList">
+                <p>No evaluations submitted yet.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+            <!-- Complaints Section -->
+            <div id="complaintsSection" style="display: none; margin-left:250px " >
+                <div class="section">
+                    <div class="section-header">
+                        <h2>My Complaints</h2>
+                        <a href="#" class="new-complaint-btn" onclick="toggleComplaintForm()">New Complaint</a>
+                    </div>
+                    <div class="complaint-item">
+                        <div class="complaint-header">
+                            <h4>Bullying Incident</h4>
+                            <span class="status-badge status-resolved">Resolved</span>
+                        </div>
+                        <p>I was bullied by some senior students near the library yesterday afternoon.</p>
+                        <small>Submitted: Apr 20, 2023 | To: Discipline Master</small>
+                    </div>
+                    <div class="complaint-item">
+                        <div class="complaint-header">
+                            <h4>Broken Desk</h4>
+                            <span class="status-badge status-pending">Pending</span>
+                        </div>
+                        <p>My desk in Form 2 West classroom is broken and needs replacement.</p>
+                        <small>Submitted: May 2, 2023 | To: Administration</small>
+                    </div>
+                </div>
+
+                <div class="section" id="newComplaintForm" style="display: none;">
+                    <div class="section-header">
+                        <h2>New Complaint</h2>
+                    </div>
+                    <div class="form-group">
+                        <label for="complaintTitle">Title</label>
+                        <input type="text" id="complaintTitle" placeholder="Enter complaint title">
+                    </div>
+                    <div class="form-group">
+                        <label for="complaintRecipient">Send To</label>
+                        <select id="complaintRecipient">
+                            <option value="admin">Administration</option>
+                            <option value="teacher">Subject Teacher</option>
+                            <option value="discipline">Discipline Master</option>
+                            <option value="hod">Head of Department</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="complaintDetails">Details</label>
+                        <textarea id="complaintDetails" placeholder="Describe your complaint in detail..."></textarea>
+                    </div>
+                    <button class="submit-btn" onclick="submitComplaint()">Submit Complaint</button>
+                </div>
+            </div>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.19/jspdf.plugin.autotable.min.js"></script>
+
+            <!-- Leave Application Section -->
+            <div id="leaveSection" style="display: none; margin-left:250px;">
+                <div class="section">
+                    <div class="section-header">
+                        <h2>My Leave Applications</h2>
+                        <a href="#" class="new-leave-btn" onclick="toggleLeaveForm()">Apply for Leave</a>
+                    </div>
+                    <div class="leave-item">
+                        <div class="leave-header">
+                            <h4>Medical Leave</h4>
+                            <span class="status-badge status-approved">Approved</span>
+                        </div>
+                        <p>I need to see a doctor for a scheduled medical checkup.</p>
+                        <small>Dates: May 10-11, 2023 | Submitted: May 5, 2023</small>
+                    </div>
+                    <div class="leave-item">
+                        <div class="leave-header">
+                            <h4>Family Event</h4>
+                            <span class="status-badge status-rejected">Rejected</span>
+                        </div>
+                        <p>Family wedding that requires my attendance.</p>
+                        <small>Dates: May 15, 2023 | Submitted: May 1, 2023</small>
+                    </div>
+                </div>
+
+                <div class="section" id="newLeaveForm" style="display: none;">
+                    <div class="section-header">
+                        <h2>Apply for Leave</h2>
+                    </div>
+                    <div class="form-group">
+                        <label for="leaveType">Leave Type</label>
+                        <select id="leaveType">
+                            <option value="medical">Medical</option>
+                            <option value="personal">Personal</option>
+                            <option value="family">Family</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="leaveDates">Dates</label>
+                        <input type="text" id="leaveDates" placeholder="Select dates (e.g. May 10-11)">
+                    </div>
+                    <div class="form-group">
+                        <label for="leaveReason">Reason</label>
+                        <textarea id="leaveReason" placeholder="Explain why you need leave..."></textarea>
+                    </div>
+                    <button class="submit-btn" onclick="submitLeave()">Submit Application</button>
+                </div>
+            </div>
+
+            <!-- Leader Notification Section (only visible for leaders) -->
+            <div class="section leader-actions" style="display: none;">
+                <div class="section-header">
+                    <h2>Stream Notification (Class Monitor)</h2>
+                </div>
+                <div class="notification-form">
+                    <textarea id="notificationText" placeholder="Type your notification to stream to all students..."></textarea>
+                    <button class="submit-btn" onclick="streamNotification()">Stream Notification</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Global state
+let evaluationsSubmitted = JSON.parse(localStorage.getItem('evaluations')) || [];
+let feesPaid = JSON.parse(localStorage.getItem('feesPaid')) || false;
+
+// Initialize the page
+document.addEventListener('DOMContentLoaded', function () {
+    updateEvaluationsList();
+    document.querySelectorAll('.payment-method').forEach(method => {
+        method.addEventListener('click', function () {
+            document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+
+    const loginBtn = document.querySelector('.login-btn');
+    if (loginBtn) loginBtn.addEventListener('click', login);
+
+    updateFeeStatus();
+});
+
+function updateFeeStatus() {
+    const balanceElem = document.getElementById('balance');
+    if (!balanceElem) return;
+    const balance = parseFloat(balanceElem.textContent.replace('$', ''));
+    feesPaid = balance <= 0;
+    localStorage.setItem('feesPaid', JSON.stringify(feesPaid));
+}
+
+function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    if (sidebar) sidebar.classList.toggle('active');
+}
+function showSection(sectionId, event) {
+    event?.preventDefault();
+    
+    const sections = ['dashboard', 'fees', 'subjects', 'evaluation', 'complaints', 'leave', 'results', 'clearance'];
+    sections.forEach(id => {
+        const section = document.getElementById(`${id}Section`);
+        if (section) section.style.display = 'none';
+    });
+
+    const targetSection = document.getElementById(`${sectionId}Section`);
+    if (targetSection) targetSection.style.display = 'block';
+
+    document.querySelectorAll('.sidebar-menu a').forEach(link => link.classList.remove('active'));
+    if (event?.currentTarget) event.currentTarget.classList.add('active');
+
+    const titles = {
+        dashboard: 'Dashboard',
+        fees: 'Fee Payment',
+        subjects: 'Subject Management',
+        evaluation: 'Teacher Evaluation',
+        complaints: 'Complaints',
+        leave: 'Leave Application',
+        results: 'Academic Results',
+        clearance: 'Clearance Form'
+    };
+    
+    const titleElement = document.getElementById('sectionTitle');
+    if (titleElement) titleElement.textContent = titles[sectionId] ?? '';
+
+    if (sectionId === 'evaluation') {
+        const evaluationsCompleted = document.getElementById('evaluationsCompleted');
+        if (evaluationsCompleted) evaluationsCompleted.style.display = evaluationsSubmitted.length > 0 ? 'block' : 'none';
+    }
+}
+
+
+function login() {
+    const username = document.getElementById('regNumber')?.value;
+    const password = document.getElementById('password')?.value;
+    if (username && password) {
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('studentPortal').style.display = 'block';
+        updateEvaluationsList();
+    } else {
+        alert('Please enter both registration number and password');
+    }
+}
+
+function logout() {
+    document.getElementById('studentPortal').style.display = 'none';
+    document.getElementById('loginPage').style.display = 'flex';
+    document.getElementById('regNumber').value = '';
+    document.getElementById('password').value = '';
+}
+
+function clearSubject(button, subjectName) {
+    if (confirm(`Drop ${subjectName}?`)) {
+        button.closest('.subject-item')?.remove();
+        alert(`${subjectName} dropped.`);
+    }
+}
+
+function registerSubject() {
+    const subjectSelect = document.getElementById('newSubject');
+    const subjectName = subjectSelect.value;
+    if (!subjectName) return alert('Please select a subject');
+    if (confirm(`Register for ${subjectName}?`)) {
+        const subjectList = document.getElementById('subjectList');
+        const newSubject = document.createElement('li');
+        newSubject.className = 'subject-item';
+        newSubject.innerHTML = `<span>${subjectName}</span>
+            <div class="subject-actions">
+                <button onclick="clearSubject(this, '${subjectName}')">Drop</button>
+            </div>`;
+        subjectList.appendChild(newSubject);
+        subjectSelect.value = '';
+        alert(`${subjectName} registered.`);
+    }
+}
+
+function submitEvaluation() {
+    const teacherSelect = document.getElementById('teacherSelect');
+    const rating = document.getElementById('rating');
+    const comments = document.getElementById('comments');
+    if (!teacherSelect.value) return alert('Please select a teacher');
+    const teacherName = teacherSelect.options[teacherSelect.selectedIndex].text;
+    if (evaluationsSubmitted.some(e => e.teacher === teacherName)) {
+        alert(`You have already evaluated ${teacherName}.`);
+        return;
+    }
+    const newEvaluation = {
+        teacher: teacherName,
+        rating: rating.value,
+        comments: comments.value,
+        date: new Date().toLocaleDateString(),
+        timestamp: Date.now()
+    };
+    evaluationsSubmitted.push(newEvaluation);
+    saveEvaluations();
+    updateEvaluationsList();
+    const evaluationsCompleted = document.getElementById('evaluationsCompleted');
+    if (evaluationsCompleted) evaluationsCompleted.style.display = 'block';
+    alert(`Evaluation submitted for ${teacherName} (${rating.value}/5)`);
+    teacherSelect.value = '';
+    rating.value = '1';
+    comments.value = '';
+}
+
+function saveEvaluations() {
+    localStorage.setItem('evaluations', JSON.stringify(evaluationsSubmitted));
+}
+
+function updateEvaluationsList() {
+    const evaluationsList = document.getElementById('evaluationsList');
+    if (!evaluationsList) return;
+    evaluationsList.innerHTML = '';
+    if (evaluationsSubmitted.length === 0) {
+        evaluationsList.innerHTML = '<p>No evaluations submitted yet.</p>';
+        return;
+    }
+    evaluationsSubmitted.forEach(e => {
+        const item = document.createElement('div');
+        item.className = 'notification-item';
+        item.innerHTML = `<h4>${e.teacher}</h4>
+            <p><strong>Rating:</strong> ${e.rating}/5</p>
+            ${e.comments ? `<p><strong>Comments:</strong> ${e.comments}</p>` : ''}
+            <small>Submitted: ${e.date}</small>`;
+        evaluationsList.appendChild(item);
+    });
+}
+
+function toggleComplaintForm() {
+    const form = document.getElementById('newComplaintForm');
+    if (form) form.style.display = form.style.display === 'none' ? 'block' : 'none';
+}
+
+function submitComplaint() {
+    const title = document.getElementById('complaintTitle').value;
+    const recipient = document.getElementById('complaintRecipient').value;
+    const details = document.getElementById('complaintDetails').value;
+    if (!title || !details) return alert('Please fill in all fields');
+    const recipientText = document.getElementById('complaintRecipient').options[document.getElementById('complaintRecipient').selectedIndex].text;
+    alert(`Complaint "${title}" submitted to ${recipientText}`);
+    document.getElementById('complaintTitle').value = '';
+    document.getElementById('complaintRecipient').value = 'admin';
+    document.getElementById('complaintDetails').value = '';
+    document.getElementById('newComplaintForm').style.display = 'none';
+}
+
+function toggleLeaveForm() {
+    const form = document.getElementById('newLeaveForm');
+    if (form) form.style.display = form.style.display === 'none' ? 'block' : 'none';
+}
+
+function submitLeave() {
+    const type = document.getElementById('leaveType').value;
+    const dates = document.getElementById('leaveDates').value;
+    const reason = document.getElementById('leaveReason').value;
+    if (!dates || !reason) return alert('Please fill in all fields');
+    const typeText = document.getElementById('leaveType').options[document.getElementById('leaveType').selectedIndex].text;
+    alert(`${typeText} leave requested for ${dates}`);
+    document.getElementById('leaveType').value = 'medical';
+    document.getElementById('leaveDates').value = '';
+    document.getElementById('leaveReason').value = '';
+    document.getElementById('newLeaveForm').style.display = 'none';
+}
+
+function processPayment() {
+    const amountInput = document.getElementById('amount');
+    const selectedMethodElem = document.querySelector('.payment-method.active');
+    const methodSpan = selectedMethodElem?.querySelector('span');
+    if (!methodSpan) return alert('Please select a payment method.');
+    const paymentAmount = parseFloat(amountInput.value.trim());
+    if (isNaN(paymentAmount) || paymentAmount < 100) return alert('Invalid payment amount.');
+    if (confirm(`Proceed with $${paymentAmount} using ${methodSpan.innerText}?`)) {
+        const modal = document.createElement('div');
+        modal.id = 'paymentProgressModal';
+        modal.style.cssText = `
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); display: flex; justify-content: center;
+            align-items: center; z-index: 1000;`;
+        modal.innerHTML = `
+            <div style="background: white; padding: 2rem; border-radius: 8px; text-align: center;">
+                <h3>Processing Payment</h3>
+                <div style="width: 100%; background: #eee; border-radius: 4px; margin: 1rem 0;">
+                    <div id="paymentProgressBar" style="height: 20px; background: #3498db; border-radius: 4px; width: 0%;"></div>
+                </div>
+                <p id="paymentProgressText">0%</p>
+            </div>`;
+        document.body.appendChild(modal);
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += 10;
+            document.getElementById('paymentProgressBar').style.width = `${progress}%`;
+            document.getElementById('paymentProgressText').textContent = `${progress}%`;
+            if (progress >= 100) {
+                clearInterval(interval);
+                setTimeout(() => {
+                    document.body.removeChild(modal);
+                    const balanceElem = document.getElementById('balance');
+                    const currentBalance = parseFloat(balanceElem.textContent.replace('$', ''));
+                    const newBalance = currentBalance - paymentAmount;
+                    balanceElem.textContent = `$${newBalance.toFixed(2)}`;
+                    balanceElem.className = newBalance <= 0 ? 'fee-balance positive' : 'fee-balance negative';
+                    const totalFees = 1300;
+                    const paidAmount = totalFees - newBalance;
+                    document.querySelector('.fee-progress .progress-bar').style.width = `${(paidAmount / totalFees) * 100}%`;
+                    document.querySelector('.fee-details span:first-child').textContent = `Paid: $${paidAmount.toFixed(2)}`;
+                    alert(`Payment of $${paymentAmount} processed.`);
+                    feesPaid = newBalance <= 0;
+                    localStorage.setItem('feesPaid', JSON.stringify(feesPaid));
+                }, 500);
+            }
+        }, 200);
+    }
+}
+
+function downloadExamCard() {
+    const balance = parseFloat(document.getElementById('balance').textContent.replace('$', ''));
+    if (balance > 0) {
+        alert("Please clear your fees before downloading exam card.");
+        showSection('fees');
+        return;
+    }
+    const requiredTeachers = ['Mr. Johnson (Mathematics)', 'Mrs. Anderson (English)', 'Mr. Kamau (Physics)', 'Ms. Wanjiku (Chemistry)'];
+    const evaluatedTeachers = evaluationsSubmitted.map(e => e.teacher);
+    const missing = requiredTeachers.filter(t => !evaluatedTeachers.includes(t));
+    if (missing.length > 5) {
+        alert(`Complete evaluations for: ${missing.join(', ')}`);
+        showSection('evaluation');
+        return;
+    }
+    const modal = document.createElement('div');
+    modal.id = 'examCardProgressModal';
+    modal.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.5); display: flex; justify-content: center;
+        align-items: center; z-index: 1000;`;
+    modal.innerHTML = `
+        <div style="background: white; padding: 2rem; border-radius: 8px; text-align: center;">
+            <h3>Generating Exam Card</h3>
+            <div style="width: 100%; background: #eee; border-radius: 4px; margin: 1rem 0;">
+                <div id="examCardProgressBar" style="height: 20px; background: #3498db; border-radius: 4px; width: 0%;"></div>
+            </div>
+            <p id="examCardProgressText">0%</p>
+        </div>`;
+    document.body.appendChild(modal);
+    let progress = 0;
+    const interval = setInterval(() => {
+        progress += 10;
+        document.getElementById('examCardProgressBar').style.width = `${progress}%`;
+        document.getElementById('examCardProgressText').textContent = `${progress}%`;
+        if (progress >= 100) {
+            clearInterval(interval);
+            setTimeout(() => {
+                document.body.removeChild(modal);
+                generateExamCardPDF();
+            }, 500);
+        }
+    }, 200);
+}
+function generateExamCardPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const name = document.getElementById('name').textContent;
+    const regNumber = document.querySelector('.sidebar-header small').textContent;
+    const subjects = Array.from(document.querySelectorAll('#subjectList .subject-item span')).map(el => el.textContent);
+    const imgElement = document.getElementById('picture');
+    const imgUrl = imgElement.src;
+
+    // Load image from URL and convert to base64
+    const img = new Image();
+    img.crossOrigin = 'Anonymous'; // Allow loading external image
+    img.onload = function () {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        const imgData = canvas.toDataURL('image/png');
+
+        doc.setFontSize(20);
+        doc.setTextColor(40, 53, 147);
+        doc.text('ST. MARYS HIGH SCHOOL', 105, 20, { align: 'center' });
+        doc.setFontSize(16);
+        doc.text('OFFICIAL EXAMINATION CARD', 105, 30, { align: 'center' });
+
+        // Add profile image
+        doc.addImage(imgData, 'PNG', 150, 40, 40, 40); // (x, y, width, height)
+
+        doc.setFontSize(12);
+        doc.setTextColor(0, 0, 0);
+        doc.text(`Student Name: ${name}`, 20, 50);
+        doc.text(`Registration No: ${regNumber}`, 20, 60);
+        doc.text(`Date Issued: ${new Date().toLocaleDateString()}`, 20, 70);
+
+        doc.text('Registered Subjects:', 20, 90);
+        let yPos = 100;
+        subjects.forEach((subject, index) => {
+            doc.text(`${index + 1}. ${subject}`, 25, yPos);
+            yPos += 10;
+        });
+
+        doc.text('_________________________', 30, yPos + 30);
+        doc.text('Student Signature', 30, yPos + 40);
+        doc.text('_________________________', 120, yPos + 30);
+        doc.text('Principal Signature', 120, yPos + 40);
+
+        doc.setDrawColor(255, 0, 0);
+        doc.ellipse(150, yPos + 20, 20, 15, 'D');
+        doc.setFontSize(10);
+        doc.text('mary high school', 150, yPos + 20, { align: 'center' });
+
+        doc.save(`${name.replace(' ', '_')}_Exam_Card.pdf`);
+        alert("Exam card downloaded successfully!");
+    };
+
+    img.onerror = function () {
+        alert("Failed to load profile picture. Generating exam card without photo.");
+        // fallback to generating PDF without image
+        fallbackGenerateExamCardPDF(doc, name, regNumber, subjects);
+    };
+
+    img.src = imgUrl;
+}
+
+function fallbackGenerateExamCardPDF(doc, name, regNumber, subjects) {
+    doc.setFontSize(20);
+    doc.setTextColor(40, 53, 147);
+    doc.text('ST. MARYS HIGH SCHOOL', 105, 20, { align: 'center' });
+    doc.setFontSize(16);
+    doc.text('OFFICIAL EXAMINATION CARD', 105, 30, { align: 'center' });
+
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+    doc.text(`Student Name: ${name}`, 20, 50);
+    doc.text(`Registration No: ${regNumber}`, 20, 60);
+    doc.text(`Date Issued: ${new Date().toLocaleDateString()}`, 20, 70);
+
+    doc.text('Registered Subjects:', 20, 90);
+    let yPos = 100;
+    subjects.forEach((subject, index) => {
+        doc.text(`${index + 1}. ${subject}`, 25, yPos);
+        yPos += 10;
+    });
+
+    doc.text('_________________________', 30, yPos + 30);
+    doc.text('Student Signature', 30, yPos + 40);
+    doc.text('_________________________', 120, yPos + 30);
+    doc.text('Principal Signature', 120, yPos + 40);
+
+    doc.setDrawColor(255, 0, 0);
+    doc.ellipse(150, yPos + 20, 20, 15, 'D');
+    doc.setFontSize(10);
+    doc.text('OFFICIAL STAMP', 150, yPos + 20, { align: 'center' });
+
+    doc.save(`${name.replace(' ', '_')}_Exam_Card.pdf`);
+    alert("Exam card downloaded successfully!");
+}
+
+function downloadFeeStructure() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    const nameElement = document.getElementById('name');
+    const regElement = document.querySelector('.sidebar-header small');
+    const balanceElement = document.getElementById('balance');
+
+    
+    if (!nameElement || !regElement || !balanceElement) {
+        alert('Some required data is missing on the page.');
+        return;
+    }
+
+    const name = nameElement.textContent.trim();
+    const regNumber = regElement.textContent.trim();
+    const totalFees = 1300;
+    const balance = parseFloat(balanceElement.textContent.replace('$', '').trim());
+    const paidAmount = totalFees - balance;
+
+    doc.setFontSize(20);
+    doc.setTextColor(40, 53, 147);
+    doc.text('ST. MARYS HIGH SCHOOL', 105, 20, { align: 'center' });
+    doc.setFontSize(16);
+    doc.text('FEE STRUCTURE', 105, 30, { align: 'center' });
+
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+    doc.text(`Student Name: ${name}`, 20, 50);
+    doc.text(`Registration No: ${regNumber}`, 20, 60);
+    doc.text(`Date Issued: ${new Date().toLocaleDateString()}`, 20, 70);
+
+    doc.text('------------------------------------------', 20, 80);
+    doc.text(`Total Fees: $${totalFees.toFixed(2)}`, 20, 90);
+    doc.text(`Amount Paid: $${paidAmount.toFixed(2)}`, 20, 100);
+    doc.text(`Outstanding Balance: $${balance.toFixed(2)}`, 20, 110);
+    doc.text('------------------------------------------', 20, 120);
+
+    doc.text('Thank you for your payment!', 20, 140);
+
+    doc.setDrawColor(255, 0, 0);
+    doc.ellipse(150, 150, 20, 15, 'D');
+    doc.setFontSize(10);
+    doc.text('OFFICIAL STAMP', 150, 150, { align: 'center' });
+
+    doc.save(`${name.replace(' ', '_')}_Fee_Structure.pdf`);
+    alert("Fee structure downloaded successfully!");
+}
+async function downloadResults() {
+    // Show progress modal
+    const modal = document.createElement('div');
+    modal.id = 'resultsProgressModal';
+    modal.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.5); display: flex; justify-content: center;
+        align-items: center; z-index: 1000;`;
+    modal.innerHTML = `
+        <div style="background: white; padding: 2rem; border-radius: 8px; text-align: center;">
+            <h3>Generating Results PDF</h3>
+            <div style="width: 100%; background: #eee; border-radius: 4px; margin: 1rem 0;">
+                <div id="resultsProgressBar" style="height: 20px; background: #3498db; border-radius: 4px; width: 0%;"></div>
+            </div>
+            <p id="resultsProgressText">0%</p>
+        </div>`;
+    document.body.appendChild(modal);
+
+    let progress = 0;
+    const interval = setInterval(() => {
+        progress += 10;
+        document.getElementById('resultsProgressBar').style.width = `${progress}%`;
+        document.getElementById('resultsProgressText').textContent = `${progress}%`;
+        if (progress >= 100) {
+            clearInterval(interval);
+            setTimeout(() => {
+                document.body.removeChild(modal);
+                generateResultsPDF();
+            }, 500);
+        }
+    }, 200);
+}
+
+function generateResultsPDF() {
+    try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        // Get student details
+        const name = document.getElementById('name').textContent.trim();
+        const regNumber = document.querySelector('.sidebar-header small').textContent.trim();
+        
+        // Get results data
+        const rows = Array.from(document.querySelectorAll('#resultsTableBody tr')).map(row => {
+            const cells = row.querySelectorAll('td');
+            return {
+                subject: cells[0].textContent.trim(),
+                marks: cells[1].textContent.trim(),
+                grade: cells[2].textContent.trim(),
+                status: cells[3].textContent.trim(),
+            };
+        });
+
+        // Add header
+        doc.setFontSize(20);
+        doc.setTextColor(40, 53, 147);
+        doc.text('ST. MARYS HIGH SCHOOL', 105, 20, { align: 'center' });
+        doc.setFontSize(16);
+        doc.text('ACADEMIC RESULTS', 105, 30, { align: 'center' });
+
+        // Add student info
+        doc.setFontSize(12);
+        doc.setTextColor(0, 0, 0);
+        doc.text(`Student Name: ${name}`, 20, 50);
+        doc.text(`Registration No: ${regNumber}`, 20, 60);
+        doc.text(`Date Issued: ${new Date().toLocaleDateString()}`, 20, 70);
+
+        // Add results table header
+        doc.setFontSize(14);
+        doc.text('Subject', 20, 90);
+        doc.text('Marks', 80, 90);
+        doc.text('Grade', 120, 90);
+        doc.text('Status', 160, 90);
+        doc.line(20, 95, 190, 95);
+
+        // Add results rows
+        let yPos = 105;
+        rows.forEach(({ subject, marks, grade, status }) => {
+            doc.text(subject, 20, yPos);
+            doc.text(marks, 80, yPos);
+            doc.text(grade, 120, yPos);
+            doc.text(status, 160, yPos);
+            yPos += 10;
+        });
+
+        // Add signature lines and stamp
+        doc.text('_________________________', 30, yPos + 30);
+        doc.text('Student Signature', 30, yPos + 40);
+        doc.text('_________________________', 120, yPos + 30);
+        doc.text('Principal Signature', 120, yPos + 40);
+
+        doc.setDrawColor(255, 0, 0);
+        doc.ellipse(150, yPos + 20, 20, 15, 'D');
+        doc.setFontSize(10);
+        doc.text('OFFICIAL STAMP', 150, yPos + 20, { align: 'center' });
+
+        // Save the PDF
+        doc.save(`${name.replace(/\s+/g, '_')}_Results.pdf`);
+        alert("Results downloaded successfully!");
+    } catch (error) {
+        console.error('Error generating results PDF:', error);
+        alert('Failed to download results. Please try again.');
+    }
+}
+
+function downloadClearance(event) {
+    event.preventDefault()
+    try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        // Get input values
+        const name = document.getElementById("jina").value;
+        const registration = document.getElementById("regi").value;
+
+        // Validate inputs
+        if (!name || !registration) {
+            document.getElementById("errorMessage").innerHTML = "⚠️ Error: Please fill in both Name and Registration Number!";
+            return;
+        }
+
+        // Clear error message
+        document.getElementById("errorMessage").innerHTML = "";
+
+        // PDF Header
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(16);
+        doc.text("ST. MARY'S HIGH SCHOOL", 105, 20, { align: 'center' });
+        doc.setFontSize(14);
+        doc.text("CLEARANCE FORM", 105, 30, { align: 'center' });
+
+        // Student Information
+        doc.setFontSize(12);
+        doc.setTextColor(0, 0, 0);
+        doc.text(`Student Name: ${name}`, 20, 50);
+        doc.text(`Registration Number: ${registration}`, 20, 60);
+        doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 70);
+
+        // Clearance Sections Table
+        const clearanceDetails = [
+            ["Library Clearance", "Cleared", "Librarian"],
+            ["Finance Section", "Cleared", "Finance Officer"],
+            ["Games Department", "Cleared", "Games Chief"],
+            ["Registrar Clearance", "Cleared", "Registrar"]
+        ];
+
+        doc.autoTable({
+            startY: 80,
+            head: [["Section", "Status", "Signed By"]],
+            body: clearanceDetails,
+            margin: { left: 20 },
+            styles: { fontSize: 10 }
+        });
+
+        // Extract Subject Table Data
+        const subjectTable = [];
+        const tables = document.querySelectorAll('table[border="2"]');
+        if (tables.length > 1) {
+            const subjectTableRows = tables[1].querySelectorAll('tbody tr');
+            
+            subjectTableRows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length >= 4) {
+                    const subject = cells[0].querySelector('input') ? 
+                        cells[0].querySelector('input').value.trim() : 
+                        cells[0].textContent.trim();
+                    const teacher = cells[1].querySelector('input') ? 
+                        cells[1].querySelector('input').value.trim() : "";
+                    const signature = cells[2].querySelector('input') ?
+                        cells[2].querySelector('input').value.trim() : "";
+                    const comment = cells[3].querySelector('input') ?
+                        cells[3].querySelector('input').value.trim() : cells[3].textContent.trim();
+                    
+                    if (subject) {
+                        subjectTable.push([subject, teacher, signature, comment]);
+                    }
+                }
+            });
+        }
+
+        doc.autoTable({
+            startY: doc.previousAutoTable.finalY + 10,
+            head: [["Subject", "Teacher", "Signature", "Comments"]],
+            body: subjectTable,
+            margin: { left: 20 },
+            styles: { fontSize: 10 }
+        });
+
+        // Signature Section
+        let finalY = doc.previousAutoTable.finalY + 20;
+        doc.setFontSize(12);
+        doc.text("__________________________", 40, finalY);
+        doc.text("Student Signature", 40, finalY + 10);
+
+        doc.text("__________________________", 120, finalY);
+        doc.text("Principal/Registrar Signature", 120, finalY + 10);
+
+        // Official Stamp
+        doc.setDrawColor(255, 0, 0);
+        doc.ellipse(150, finalY + 20, 20, 15, 'D');
+        doc.setFontSize(10);
+        doc.text("OFFICIAL STAMP", 150, finalY + 20, { align: 'center' });
+
+        // Add N/B note at the bottom
+        finalY += 40; // Add more space after signatures
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "bold");
+        doc.text("N/B:", 20, finalY);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(255, 0, 0); // Red color for emphasis
+        doc.text("1. FORM IS VALID ONLY FOR 5 DAYS SINCE DOWNLOAD", 30, finalY + 7);
+        doc.text("2. TAKE TO RESPECTIVE OFFICES TO BE CLEARED", 30, finalY + 14);
+        doc.setTextColor(0, 0, 0); // Reset to black color
+
+        // Save PDF
+        doc.save(`${name.replace(/\s+/g, '_')}_Clearance_Form.pdf`);
+        
+    } catch (error) {
+        document.getElementById("errorMessage").innerHTML = `⚠️ Error: ${error.message}`;
+        console.error("Error generating clearance form:", error);
+    }
+}
+</script>
+</body>
+</html>
